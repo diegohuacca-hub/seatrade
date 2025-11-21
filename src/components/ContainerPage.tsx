@@ -93,21 +93,22 @@ export const ContainerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
+    <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-7xl mx-auto space-y-12">
 
-        {/* HEADER */}
-        <header className="text-center space-y-2">
-          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500 truncate">
+        {/* ---- HEADER FIX ---- */}
+        <header className="text-center px-2">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500 whitespace-normal break-words">
             {t("containers.title")}
           </h1>
-          <p className="text-gray-600 text-lg line-clamp-2 max-w-2xl mx-auto">
+
+          <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto mt-4">
             {t("containers.subtitle")}
           </p>
         </header>
 
-        {/* TARJETAS */}
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* ---- CONTAINER CARDS ---- */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {containerTypes.map((container, idx) => {
             const Icon = container.icon;
 
@@ -115,13 +116,12 @@ export const ContainerPage = () => {
               <Card key={idx} className="p-6 shadow-lg rounded-2xl bg-white">
                 <div className="flex gap-3 mb-3 items-center">
                   <Icon className="text-teal-500 w-8 h-8" />
-                  <h2 className="font-bold text-lg truncate">{container.name}</h2>
+                  <h2 className="font-bold text-lg">{container.name}</h2>
                 </div>
 
                 <Container3D type={container.name.includes("20") ? "20" : "40"} isReefer={container.name.includes("REEFER")} />
                 <p className="text-xs text-gray-500 text-center">{t("containers.rotate")}</p>
 
-                {/* ORIGIN INPUT */}
                 <label className="block mt-4 font-semibold text-sm">{t("containers.origin")}</label>
                 <Input
                   placeholder={t("containers.originPH")}
@@ -149,13 +149,12 @@ export const ContainerPage = () => {
                     </button>
                   ))}
 
-                {/* DESTINATION BUTTONS */}
                 <label className="block mt-4 font-semibold text-sm">{t("containers.destination")}</label>
-                <div className="flex gap-2 mt-2">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {["callao", "chancay", "paita"].map((port) => (
                     <button
                       key={port}
-                      className={`px-4 py-2 rounded-md text-sm truncate ${
+                      className={`px-4 py-2 rounded-md text-sm ${
                         selectedDestinations[idx] === port ? "bg-teal-600 text-white" : "bg-gray-200"
                       }`}
                       onClick={() => {
@@ -169,10 +168,9 @@ export const ContainerPage = () => {
                   ))}
                 </div>
 
-                {/* CTA */}
                 <button
                   onClick={() => handleOpenTariff(idx, container.name)}
-                  className="mt-5 bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-lg font-semibold truncate"
+                  className="mt-5 bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-lg font-semibold"
                 >
                   {t("containers.viewRates")}
                 </button>
@@ -181,15 +179,15 @@ export const ContainerPage = () => {
           })}
         </div>
 
-        {/* TABLA DE TARIFAS */}
+        {/* ---- FREIGHT TABLE ---- */}
         <Card className="p-6">
-          <h2 className="font-bold text-xl mb-4 truncate">{t("containers.tableTitle")}</h2>
+          <h2 className="font-bold text-xl mb-4">{t("containers.tableTitle")}</h2>
 
           <div className="flex flex-col md:flex-row gap-3 mb-4">
             <Input placeholder={t("containers.searchPH")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
             <Select value={selectedContinent} onValueChange={setSelectedContinent}>
-              <SelectTrigger className="w-full md:w-48 truncate">
+              <SelectTrigger className="w-full md:w-48">
                 <SelectValue placeholder={t("containers.selectContinent")} />
               </SelectTrigger>
               <SelectContent>
@@ -203,42 +201,42 @@ export const ContainerPage = () => {
             </Select>
           </div>
 
-          {/* TABLE */}
-          <table className="w-full text-left">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2">{t("containers.country")}</th>
-                <th className="p-2">{t("containers.port")}</th>
-                <th className="p-2 text-center">{t("containers.fob20")}</th>
-                <th className="p-2 text-center">{t("containers.fob40")}</th>
-                <th className="p-2 text-center">{t("containers.cif20")}</th>
-                <th className="p-2 text-center">{t("containers.cif40")}</th>
-                <th className="p-2">{t("containers.continent")}</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {filteredRates.length === 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[650px]">
+              <thead className="bg-gray-100">
                 <tr>
-                  <td colSpan={7} className="text-center p-4 text-gray-500">
-                    {t("containers.noResults")}
-                  </td>
+                  <th className="p-2">{t("containers.country")}</th>
+                  <th className="p-2">{t("containers.port")}</th>
+                  <th className="p-2 text-center">{t("containers.fob20")}</th>
+                  <th className="p-2 text-center">{t("containers.fob40")}</th>
+                  <th className="p-2 text-center">{t("containers.cif20")}</th>
+                  <th className="p-2 text-center">{t("containers.cif40")}</th>
+                  <th className="p-2">{t("containers.continent")}</th>
                 </tr>
-              ) : (
-                filteredRates.map((rate, i) => (
-                  <tr key={i} className="border-b hover:bg-gray-50">
-                    <td className="p-2">{rate.country}</td>
-                    <td className="p-2">{rate.port}</td>
-                    <td className="p-2 text-center">${rate.fob20}</td>
-                    <td className="p-2 text-center">${rate.fob40}</td>
-                    <td className="p-2 text-center">${rate.cif20}</td>
-                    <td className="p-2 text-center">${rate.cif40}</td>
-                    <td className="p-2">{t(`containers.continentName.${rate.continent}`) || rate.continent}</td>
+              </thead>
+              <tbody>
+                {filteredRates.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center p-4 text-gray-500">
+                      {t("containers.noResults")}
+                    </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredRates.map((rate, i) => (
+                    <tr key={i} className="border-b hover:bg-gray-50">
+                      <td className="p-2">{rate.country}</td>
+                      <td className="p-2">{rate.port}</td>
+                      <td className="p-2 text-center">${rate.fob20}</td>
+                      <td className="p-2 text-center">${rate.fob40}</td>
+                      <td className="p-2 text-center">${rate.cif20}</td>
+                      <td className="p-2 text-center">${rate.cif40}</td>
+                      <td className="p-2">{t(`containers.continentName.${rate.continent}`) || rate.continent}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </Card>
       </div>
     </div>

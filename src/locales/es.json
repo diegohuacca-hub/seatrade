@@ -79,7 +79,107 @@
   "dv40": "CONTENEDOR DRY-VAN 40'",
   "ref20": "CONTENEDOR REEFER 20'",
   "ref40": "CONTENEDOR REEFER 40'"
+},
+
+
+  "nav": {
+    "inicio": "INICIO",
+    "mapa": "MAPA",
+    "informacion": "INFORMACIÓN",
+    "contenedores": "CONTENEDORES",
+    "recursos": "RECURSOS",
+    "calculadora": "CALCULADORA",
+    "contacto": "CONTACTO"
+  },
+
+  "button": {
+    "back": "Volver al Inicio",
+    "language": "Idioma"
+  },
+
+  "calculator": {
+    "title": "Calculadora de Flete Marítimo",
+    "subtitle": "Calcule el costo de flete basado en peso, volumen y destino",
+    "cargoData": "Datos de Carga",
+    
+    "weight": "Peso (kg)",
+    "packages": "Cantidad de Bultos",
+    "width": "Ancho (m)",
+    "height": "Alto (m)",
+    "length": "Largo (m)",
+
+    "destinationCountry": "País de Destino",
+    "selectCountry": "Seleccione un país",
+    "containerType": "Tipo de Contenedor",
+    "size20": "20 pies",
+    "size40": "40 pies",
+    "productionCost": "Costo Total de Producción (USD)",
+
+    "calculate": "Calcular Flete",
+    "results": "Resultados del Cálculo",
+
+    "cargoMeasurements": "Medidas de Carga",
+    "weightTotal": "Peso total",
+    "volumeTotal": "Volumen total",
+
+    "stowageFactor": "Factor de Estiba",
+    "costSection": "Costos",
+    "freight": "Flete",
+    "production": "Producción",
+    "total": "Total Final",
+
+    "new": "Nuevo Cálculo",
+    "realQuote": "¿Quieres una cotización real del mercado?",
+    "liveEstimate": "ESTIMACIÓN EN TIEMPO REAL"
+  },
+  "home": {
+  "subtitle": "Plataforma Integral de Comercio Marítimo Internacional del Perú",
+  "description": "Explora rutas marítimas, puertos internacionales y facilita tu comercio exterior.",
+  "start": "Comenzar",
+  "team": "Equipo del Proyecto",
+  "advisor": "Asesor del Proyecto",
+  "features": "Funciones Principales",
+  "featureMap": "Mapa Interactivo",
+  "featureMapText": "Explora rutas marítimas en 3D/2D desde los puertos del Perú.",
+  "featureInfo": "Información de Puertos",
+  "featureInfoText": "Datos completos de Callao, Paita y Chancay con recursos educativos.",
+  "featureTrade": "Comercio Internacional",
+  "featureTradeText": "Guías, fichas país y herramientas para exportaciones.",
+  "contactTitle": "Contáctanos",
+  "contactText": "Si tienes consultas o deseas solicitar una cotización, estaremos encantados de ayudarte.",
+  "contactButton": "Ir al Formulario"
+},
+
+"info": {
+  "header": "Puertos y Recursos del Perú",
+  "subheader": "Descubre los principales puertos, herramientas y recursos marítimos en un solo sitio.",
+
+  "chancay": {
+    "title": "Puerto de Chancay",
+    "desc": "Terminal portuario peruano de alta capacidad ubicado en Chancay, Huaral. Primer puerto inteligente y automatizado de Sudamérica, con infraestructura avanzada y operaciones 24/7."
+  },
+
+  "callao": {
+    "title": "Puerto del Callao",
+    "desc": "Puerto principal de Perú, estratégico para el comercio marítimo del Pacífico Sur. Profundidad hasta 16 metros y capacidad para grandes portacontenedores."
+  },
+
+  "paita": {
+    "title": "Puerto de Paita",
+    "desc": "Puerto marítimo del norte peruano, segundo en movimiento de contenedores y especializado en exportaciones agrícolas e hidrobiológicas."
+  },
+
+  "buttons": {
+    "official": "Sitio Oficial",
+    "satellite": "Vista Satelital"
+  },
+
+  "toolsTitle": "Herramientas en Tiempo Real",
+  "toolsDesc": "Accede a plataformas profesionales para visualizar tráfico marítimo global, rutas, barcos y contenedores en vivo.",
+  "toolsButton1": "Tráfico marítimo",
+  "toolsButton2": "Seguimiento de barcos y contenedores"
 }
+
 
 
 }

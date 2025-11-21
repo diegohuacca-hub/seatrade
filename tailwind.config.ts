@@ -1,14 +1,14 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./pages/**/*.{ts,tsx}",
   ],
-  prefix: "",
+
   theme: {
     container: {
       center: true,
@@ -17,22 +17,20 @@ export default {
     },
 
     extend: {
-      /* =====================
-         TIPOGRAFÍA
-      ======================*/
+
+      /* =======================
+         TIPOGRAFÍA GLOBAL
+      ========================*/
       fontFamily: {
         bobby: ["var(--font-title1)", "serif"],
         "bobby-condensed": ["var(--font-title2)", "serif"],
-        poppins: ["var(--font-body)", "sans-serif"],
+        body: ["var(--font-body)", "sans-serif"],
       },
 
-      /* =====================
-         COLORES DEL SISTEMA
-      ======================*/
+      /* =======================
+         PALETA SEA MARITIME UI
+      ========================*/
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
 
@@ -51,97 +49,80 @@ export default {
           foreground: "hsl(var(--accent-foreground))",
         },
 
+        muted: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
 
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
       },
 
-      /* =====================
-         FONDOS PERSONALIZADOS
-      ======================*/
+      /* =======================
+         GRADIENTES DISEÑADOS
+      ========================*/
       backgroundImage: {
-        "gradient-ocean": "var(--gradient-ocean)",
-        "gradient-subtle": "var(--gradient-subtle)",
+        ocean: "linear-gradient(120deg, hsl(var(--secondary)) 0%, hsl(var(--primary)) 100%)",
+        accentGlow: "linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--secondary)) 100%)",
+        subtle: "linear-gradient(180deg, hsl(var(--background)), hsl(var(--card)))",
       },
 
-      /* =====================
-         SOMBRAS
-      ======================*/
+      /* =======================
+         SOMBRAS PREMIUM
+      ========================*/
       boxShadow: {
         elegant: "var(--shadow-elegant)",
         glow: "var(--shadow-glow)",
       },
 
-      /* =====================
-         TRANSICIONES
-      ======================*/
-      transitionTimingFunction: {
-        smooth: "var(--transition-smooth)",
-        bounce: "var(--transition-bounce)",
-      },
-
-      /* =====================
-         RADIOS
-      ======================*/
+      /* =======================
+         BORDER-RADIUS GLOBAL
+      ========================*/
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
 
-      /* =====================
-         LAYOUT FIJO GLOBAL
-      ======================*/
-      width: {
-        // Botones navegación
-        nav: "10rem",        // Desktop
-        navMobile: "8.5rem", // Móvil
-
-        // Botones generales
-        btn: "10rem",
-
-        // Cards InfoPage / Recursos
-        card: "22rem",
+      /* =======================
+         TIMING CURVES
+      ========================*/
+      transitionTimingFunction: {
+        smooth: "var(--transition-smooth)",
+        bounce: "var(--transition-bounce)",
       },
 
-      height: {
-        card: "26rem",
-        hero: "18rem",
-      },
-
-      maxWidth: {
-        nav: "10rem",
-      },
-
-      /* =====================
-         ANIMACIONES
-      ======================*/
+      /* =======================
+         ANIMACIONES UI
+      ========================*/
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+        fade: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        slideUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
 
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        fade: "fade .4s ease-in-out",
+        slideUp: "slideUp .45s var(--transition-bounce)",
       },
     },
   },
 
   plugins: [
     require("tailwindcss-animate"),
-    require("@tailwindcss/typography"), // mejoras en textos largos/traducciones
+    require("@tailwindcss/typography"),
   ],
-} satisfies Config;
+};
+
+export default config;

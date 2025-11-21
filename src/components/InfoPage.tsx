@@ -1,38 +1,39 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const InfoPage = () => {
+  const { t } = useLanguage();
 
   const peruPorts = [
     {
-      name: 'Puerto de Chancay',
-      description:
-        'Terminal portuario peruano de alta capacidad ubicado en Chancay, Huaral. Primer puerto inteligente y automatizado de Sudamérica, con infraestructura avanzada y operaciones 24/7.',
+      name: t("info.chancay.title"),
+      description: t("info.chancay.desc"),
       video: 'https://www.youtube.com/embed/Z3un61RDc8I',
       links: [
-        { url: 'https://coscochancay.pe/#/home', label: 'Sitio Oficial' },
-        { url: 'https://satellites.pro/mapa_de_Puerto_Chancay', label: 'Vista Satelital' },
+        { url: 'https://coscochancay.pe/#/home', label: t("info.buttons.official") },
+        { url: 'https://satellites.pro/mapa_de_Puerto_Chancay', label: t("info.buttons.satellite") },
       ],
     },
     {
-      name: 'Puerto del Callao',
-      description:
-        'Puerto principal de Perú, estratégico para el comercio marítimo del Pacífico Sur. Profundidad hasta 16 metros y capacidad para grandes portacontenedores.',
+      name: t("info.callao.title"),
+      description: t("info.callao.desc"),
       video: 'https://www.youtube.com/embed/zM5sCQAslkc',
       links: [
-        { url: 'https://www.apmterminals.com/es/callao', label: 'Sitio Oficial' },
-        { url: 'https://satellites.pro/mapa_de_El_Callao.Region_de_Callao.Peru', label: 'Vista Satelital' },
+        { url: 'https://www.apmterminals.com/es/callao', label: t("info.buttons.official") },
+        { url: 'https://satellites.pro/mapa_de_El_Callao.Region_de_Callao.Peru', label: t("info.buttons.satellite") },
       ],
     },
     {
-      name: 'Puerto de Paita',
-      description:
-        'Puerto marítimo del norte peruano, segundo en movimiento de contenedores y especializado en exportaciones agrícolas e hidrobiológicas.',
+      name: t("info.paita.title"),
+      description: t("info.paita.desc"),
       video: 'https://www.youtube.com/embed/sc8iqzkEO3Y',
       links: [
-        { url: 'https://www.puertopaita.com', label: 'Sitio Oficial' },
-        { url: 'https://satellites.pro/mapa_de_Paita.Peru#-5.078355,-81.109958,15', label: 'Vista Satelital' },
+        { url: 'https://www.puertopaita.com', label: t("info.buttons.official") },
+        { url: 'https://satellites.pro/mapa_de_Paita.Peru#-5.078355,-81.109958,15',
+          label: t("info.buttons.satellite") 
+        },
       ],
     },
   ];
@@ -40,20 +41,19 @@ export const InfoPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
 
-      {/* ===== CONTENIDO PRINCIPAL ===== */}
       <div className="max-w-6xl mx-auto py-12 px-6 md:px-12 space-y-20">
 
         {/* HEADER */}
         <header className="text-center space-y-4">
           <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 pb-1 leading-tight">
-            Puertos y Recursos del Perú
+            {t("info.header")}
           </h1>
           <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto">
-            Descubre los principales puertos, herramientas y recursos marítimos en un solo sitio.
+            {t("info.subheader")}
           </p>
         </header>
 
-        {/* ===== PUERTOS ===== */}
+        {/* PUERTOS */}
         <section className="space-y-20">
           {peruPorts.map((port, idx) => (
             <Card key={idx} className="overflow-hidden rounded-3xl shadow-xl hover:scale-105 transition duration-300 bg-white">
@@ -71,7 +71,7 @@ export const InfoPage = () => {
                   </div>
                 </div>
 
-                {/* INFO */}
+                {/* TEXTO */}
                 <div className="md:w-1/2 p-8 bg-gradient-to-b from-white to-gray-50 flex flex-col justify-center">
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">{port.name}</h2>
                   <p className="text-gray-700 mb-6">{port.description}</p>
@@ -93,28 +93,27 @@ export const InfoPage = () => {
         </section>
       </div>
 
-      {/* ===== SECCIÓN GRIS FULL WIDTH ===== */}
+      {/* SECCIÓN FINAL */}
       <section className="w-full bg-[#6E8797] py-14 px-6 md:px-20 text-center mt-0">
 
         <h2 className="text-2xl font-bold text-white tracking-wide">
-          Herramientas en Tiempo Real
+          {t("info.toolsTitle")}
         </h2>
 
         <p className="text-gray-200 text-sm max-w-3xl mx-auto mt-2">
-          Accede a plataformas profesionales para visualizar tráfico marítimo global,
-          rutas, barcos y contenedores en vivo.
+          {t("info.toolsDesc")}
         </p>
 
         <div className="flex flex-col md:flex-row justify-center gap-6 mt-8">
           <a href="https://sailingheaven.org/es/trafico-maritimo/" target="_blank" className="w-full md:w-1/2">
             <button className="w-full bg-[#BFD3DB] text-gray-900 font-semibold text-lg px-6 py-3 rounded-full shadow hover:scale-105 transition duration-300">
-              Tráfico marítimo
+              {t("info.toolsButton1")}
             </button>
           </a>
 
           <a href="https://www.vesselfinder.com/es" target="_blank" className="w-full md:w-1/2">
             <button className="w-full bg-[#BFD3DB] text-gray-900 font-semibold text-lg px-6 py-3 rounded-full shadow hover:scale-105 transition duration-300">
-              Seguimiento de barcos y contenedores
+              {t("info.toolsButton2")}
             </button>
           </a>
         </div>

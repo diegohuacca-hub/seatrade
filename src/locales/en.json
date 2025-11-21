@@ -80,7 +80,106 @@
   "dv40": "40' DRY-VAN CONTAINER",
   "ref20": "20' REEFER CONTAINER",
   "ref40": "40' REEFER CONTAINER"
+},
+
+  "nav": {
+    "inicio": "HOME",
+    "mapa": "MAP",
+    "informacion": "INFORMATION",
+    "contenedores": "CONTAINERS",
+    "recursos": "RESOURCES",
+    "calculadora": "CALCULATOR",
+    "contacto": "CONTACT"
+  },
+
+  "button": {
+    "back": "Back to Home",
+    "language": "Language"
+  },
+
+  "calculator": {
+    "title": "Maritime Freight Calculator",
+    "subtitle": "Calculate freight cost based on weight, volume and destination",
+    "cargoData": "Cargo Data",
+    
+    "weight": "Weight (kg)",
+    "packages": "Number of Packages",
+    "width": "Width (m)",
+    "height": "Height (m)",
+    "length": "Length (m)",
+
+    "destinationCountry": "Destination Country",
+    "selectCountry": "Select a country",
+    "containerType": "Container Type",
+    "size20": "20 ft",
+    "size40": "40 ft",
+    "productionCost": "Total Production Cost (USD)",
+
+    "calculate": "Calculate Freight",
+    "results": "Calculation Results",
+
+    "cargoMeasurements": "Cargo Measurements",
+    "weightTotal": "Total weight",
+    "volumeTotal": "Total volume",
+
+    "stowageFactor": "Stowage Factor",
+    "costSection": "Costs",
+    "freight": "Freight",
+    "production": "Production",
+    "total": "Final Total",
+
+    "new": "New Calculation",
+    "realQuote": "Want a real market quote?",
+    "liveEstimate": "LIVE ESTIMATE"
+  },
+  "home": {
+  "subtitle": "Comprehensive Maritime Trade Platform of Peru",
+  "description": "Explore maritime routes, ports and simplify international trade.",
+  "start": "Start",
+  "team": "Project Team",
+  "advisor": "Project Advisor",
+  "features": "Main Features",
+  "featureMap": "Interactive Map",
+  "featureMapText": "Explore maritime routes in 3D/2D from Peru's ports.",
+  "featureInfo": "Port Information",
+  "featureInfoText": "Complete data about Callao, Paita and Chancay including resources.",
+  "featureTrade": "International Trade",
+  "featureTradeText": "Guides, country profiles and export tools.",
+  "contactTitle": "Contact Us",
+  "contactText": "If you have questions or want a quote, we are happy to help.",
+  "contactButton": "Open Form"
+},
+"info": {
+  "header": "Ports and Maritime Resources of Peru",
+  "subheader": "Discover the main Peruvian ports, tools and maritime resources in one place.",
+
+  "chancay": {
+    "title": "Port of Chancay",
+    "desc": "High-capacity Peruvian port terminal located in Chancay, Huaral. First intelligent and automated port in South America with advanced infrastructure and 24/7 operations."
+  },
+
+  "callao": {
+    "title": "Port of Callao",
+    "desc": "Peru's main port, strategic for South Pacific maritime trade. Depth up to 16 meters and capacity for large container ships."
+  },
+
+  "paita": {
+    "title": "Port of Paita",
+    "desc": "Northern maritime port and second busiest container hub in Peru, specializing in agricultural and seafood exports."
+  },
+
+  "buttons": {
+    "official": "Official Website",
+    "satellite": "Satellite View"
+  },
+
+  "toolsTitle": "Real-Time Tools",
+  "toolsDesc": "Access professional platforms to visualize global maritime traffic, ships, routes and cargo tracking.",
+  "toolsButton1": "Marine Traffic",
+  "toolsButton2": "Ship & Container Tracking"
 }
+
+
 
 
 }

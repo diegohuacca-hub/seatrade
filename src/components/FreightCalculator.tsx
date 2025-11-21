@@ -1,27 +1,32 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Calculator, Package } from 'lucide-react';
-import { FREIGHT_RATES } from '@/data/freightRates';
+
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Calculator, Package } from "lucide-react";
+import { FREIGHT_RATES } from "@/data/freightRates";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const FreightCalculator = () => {
-  const [weight, setWeight] = useState<string>('');
-  const [width, setWidth] = useState<string>('');
-  const [height, setHeight] = useState<string>('');
-  const [length, setLength] = useState<string>('');
-  const [packages, setPackages] = useState<string>('1');
-  const [productionCost, setProductionCost] = useState<string>('');
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
-  const [containerType, setContainerType] = useState<'20' | '40'>('20');
-  const [incoterm, setIncoterm] = useState<'FOB' | 'CIF'>('FOB');
+  const { t } = useLanguage();
+
+  const [weight, setWeight] = useState<string>("");
+  const [width, setWidth] = useState<string>("");
+  const [height, setHeight] = useState<string>("");
+  const [length, setLength] = useState<string>("");
+  const [packages, setPackages] = useState<string>("1");
+  const [productionCost, setProductionCost] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [containerType, setContainerType] = useState<"20" | "40">("20");
+  const [incoterm, setIncoterm] = useState<"FOB" | "CIF">("FOB");
+
   const [result, setResult] = useState<{
     weightTons: number;
     volumeM3: number;
     stowageFactor: number;
-    chargeableUnit: 'weight' | 'volume';
+    chargeableUnit: "weight" | "volume";
     freightCost: number;
     totalCost: number;
   } | null>(null);
@@ -37,17 +42,23 @@ export const FreightCalculator = () => {
     if (isNaN(w) || isNaN(wi) || isNaN(h) || isNaN(l) || isNaN(p) || !selectedCountry) return;
 
     const weightTons = (w / 1000) * p;
-    const volumeM3 = (wi * h * l) * p;
+    const volumeM3 = wi * h * l * p;
     const stowageFactor = volumeM3 / weightTons;
-    const chargeableUnit: 'weight' | 'volume' = stowageFactor > 1 ? 'volume' : 'weight';
-    const chargeableValue = chargeableUnit === 'volume' ? volumeM3 : weightTons;
+    const chargeableUnit: "weight" | "volume" = stowageFactor > 1 ? "volume" : "weight";
+    const chargeableValue = chargeableUnit === "volume" ? volumeM3 : weightTons;
 
-    const rateData = FREIGHT_RATES.find(r => r.country === selectedCountry);
+    const rateData = FREIGHT_RATES.find((r) => r.country === selectedCountry);
     if (!rateData) return;
 
     let freightRate = 0;
-    if (incoterm === 'FOB') freightRate = containerType === '20' ? rateData.fob20 : rateData.fob40;
-    else freightRate = containerType === '20' ? rateData.cif20 : rateData.cif40;
+    freightRate =
+      incoterm === "FOB"
+        ? containerType === "20"
+          ? rateData.fob20
+          : rateData.fob40
+        : containerType === "20"
+        ? rateData.cif20
+        : rateData.cif40;
 
     const freightCost = chargeableValue * freightRate;
     const totalCost = freightCost + (isNaN(pc) ? 0 : pc);
@@ -63,15 +74,15 @@ export const FreightCalculator = () => {
   };
 
   const resetCalculator = () => {
-    setWeight('');
-    setWidth('');
-    setHeight('');
-    setLength('');
-    setPackages('1');
-    setProductionCost('');
-    setSelectedCountry('');
-    setContainerType('20');
-    setIncoterm('FOB');
+    setWeight("");
+    setWidth("");
+    setHeight("");
+    setLength("");
+    setPackages("1");
+    setProductionCost("");
+    setSelectedCountry("");
+    setContainerType("20");
+    setIncoterm("FOB");
     setResult(null);
   };
 
@@ -79,63 +90,52 @@ export const FreightCalculator = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 md:px-12">
 
       {/* Header */}
-      <header className="flex flex-col items-center mb-12 space-y-4 px-2 sm:px-0">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 text-center leading-tight">
-          Calculadora de Flete Marítimo
+      <header className="text-center mb-12 space-y-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500">
+          {t("calculator.title")}
         </h1>
-        <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-3xl text-center">
-          Calcule el costo de flete basado en peso, volumen y destino
-        </p>
+        <p className="text-gray-700 md:text-lg">{t("calculator.subtitle")}</p>
       </header>
 
-      {/* Contenedor Calculadora */}
       <div className="flex justify-center">
         <div className="w-full max-w-3xl">
 
           {!result ? (
-            <Card className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all">
+            <Card className="p-6 shadow-xl rounded-3xl">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-gray-900 justify-center">
-                  <Package className="h-5 w-5 text-teal-500" /> Datos de Carga
+                <CardTitle className="flex items-center justify-center gap-2 text-xl font-bold">
+                  <Package className="text-teal-500" />
+                  {t("calculator.cargoData")}
                 </CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-6">
 
-                {/* Peso y Bultos */}
+                {/* Weight & Packages */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label>Peso (kg)</Label>
-                    <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="1000" />
+                    <Label>{t("calculator.weight")}</Label>
+                    <Input placeholder="1000" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
                   </div>
                   <div>
-                    <Label>Cantidad de Bultos</Label>
-                    <Input type="number" value={packages} onChange={(e) => setPackages(e.target.value)} placeholder="1" />
+                    <Label>{t("calculator.packages")}</Label>
+                    <Input type="number" value={packages} onChange={(e) => setPackages(e.target.value)} />
                   </div>
                 </div>
 
-                {/* Dimensiones */}
+                {/* Dimensions */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <Label>Ancho (m)</Label>
-                    <Input type="number" step="0.01" value={width} onChange={(e) => setWidth(e.target.value)} />
-                  </div>
-                  <div>
-                    <Label>Alto (m)</Label>
-                    <Input type="number" step="0.01" value={height} onChange={(e) => setHeight(e.target.value)} />
-                  </div>
-                  <div>
-                    <Label>Largo (m)</Label>
-                    <Input type="number" step="0.01" value={length} onChange={(e) => setLength(e.target.value)} />
-                  </div>
+                  <div><Label>{t("calculator.width")}</Label><Input type="number" step="0.01" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
+                  <div><Label>{t("calculator.height")}</Label><Input type="number" step="0.01" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
+                  <div><Label>{t("calculator.length")}</Label><Input type="number" step="0.01" value={length} onChange={(e) => setLength(e.target.value)} /></div>
                 </div>
 
-                {/* País */}
+                {/* Destination Country */}
                 <div>
-                  <Label>País de Destino</Label>
+                  <Label>{t("calculator.destinationCountry")}</Label>
                   <Select value={selectedCountry} onValueChange={setSelectedCountry}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccione un país" />
+                      <SelectValue placeholder={t("calculator.selectCountry")} />
                     </SelectTrigger>
                     <SelectContent>
                       {FREIGHT_RATES.map((rate) => (
@@ -147,22 +147,22 @@ export const FreightCalculator = () => {
                   </Select>
                 </div>
 
-                {/* Contenedor e Incoterm */}
+                {/* Container + Incoterm */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label>Tipo de Contenedor</Label>
-                    <Select value={containerType} onValueChange={(v) => setContainerType(v as '20' | '40')}>
+                    <Label>{t("calculator.containerType")}</Label>
+                    <Select value={containerType} onValueChange={(v) => setContainerType(v as "20" | "40")}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="20">20 pies</SelectItem>
-                        <SelectItem value="40">40 pies</SelectItem>
+                        <SelectItem value="20">{t("calculator.size20")}</SelectItem>
+                        <SelectItem value="40">{t("calculator.size40")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
                     <Label>INCOTERM</Label>
-                    <Select value={incoterm} onValueChange={(v) => setIncoterm(v as 'FOB' | 'CIF')}>
+                    <Select value={incoterm} onValueChange={(v) => setIncoterm(v as "FOB" | "CIF")}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="FOB">FOB</SelectItem>
@@ -172,74 +172,62 @@ export const FreightCalculator = () => {
                   </div>
                 </div>
 
-                {/* Producción */}
+                {/* Production */}
                 <div>
-                  <Label>Costo Total de Producción (USD)</Label>
-                  <Input type="number" value={productionCost} onChange={(e) => setProductionCost(e.target.value)} placeholder="10000" />
+                  <Label>{t("calculator.productionCost")}</Label>
+                  <Input placeholder="10000" type="number" value={productionCost} onChange={(e) => setProductionCost(e.target.value)} />
                 </div>
 
-                <Button onClick={calculateFreight} className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:opacity-90" size="lg">
-                  <Calculator className="mr-2 h-5 w-5" /> Calcular Flete
+                <Button onClick={calculateFreight} className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white">
+                  <Calculator className="mr-2" /> {t("calculator.calculate")}
                 </Button>
 
               </CardContent>
             </Card>
           ) : (
-            <Card className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all">
-              <CardHeader>
-                <CardTitle className="text-xl sm:text-2xl font-bold text-gray-900 text-center">
-                  Resultados del Cálculo
-                </CardTitle>
+            <Card className="p-6 shadow-xl rounded-3xl">
+              <CardHeader className="text-center">
+                <CardTitle className="font-bold text-xl">{t("calculator.results")}</CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-6">
-
-                {/* Datos */}
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-teal-50 to-blue-50 space-y-2 shadow-inner">
-                  <h3 className="font-semibold text-gray-900">Medidas de Carga</h3>
-                  <p>Peso total: {result.weightTons.toFixed(3)} Ton</p>
-                  <p>Volumen total: {result.volumeM3.toFixed(3)} m³</p>
+                <div className="p-4 rounded-xl bg-blue-50">
+                  <h3 className="font-semibold">{t("calculator.cargoMeasurements")}</h3>
+                  <p>{t("calculator.weightTotal")}: {result.weightTons.toFixed(3)} T</p>
+                  <p>{t("calculator.volumeTotal")}: {result.volumeM3.toFixed(3)} m³</p>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-teal-50 space-y-2 shadow-inner">
-                  <h3 className="font-semibold text-gray-900">Factor de Estiba</h3>
-                  <p className="text-2xl font-bold text-teal-600">{result.stowageFactor.toFixed(2)}</p>
+                <div className="p-4 rounded-xl bg-teal-50">
+                  <h3 className="font-semibold">{t("calculator.stowageFactor")}</h3>
+                  <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-teal-100 to-blue-100 space-y-2 shadow-inner">
-                  <h3 className="font-semibold text-gray-900">Costos</h3>
-                  <p>Flete: ${result.freightCost.toFixed(2)}</p>
-                  {!!productionCost && <p>Producción: ${parseFloat(productionCost).toFixed(2)}</p>}
-                  <h3 className="font-bold text-teal-600 text-xl">
-                    Total: USD ${result.totalCost.toFixed(2)}
-                  </h3>
+                <div className="p-4 rounded-xl bg-blue-100">
+                  <h3 className="font-semibold">{t("calculator.costSection")}</h3>
+                  <p>{t("calculator.freight")}: ${result.freightCost.toFixed(2)}</p>
+                  {!!productionCost && <p>{t("calculator.production")}: ${parseFloat(productionCost).toFixed(2)}</p>}
+                  <h3 className="font-bold text-xl text-teal-600">{t("calculator.total")}: USD ${result.totalCost.toFixed(2)}</h3>
                 </div>
 
-                <Button onClick={resetCalculator} className="w-full bg-gray-300 hover:bg-gray-400 text-gray-900">
-                  Nuevo Cálculo
+                <Button onClick={resetCalculator} className="w-full bg-gray-300 text-gray-900">
+                  {t("calculator.new")}
                 </Button>
               </CardContent>
             </Card>
           )}
 
-          {/* Botón debajo SIEMPRE */}
-          <Card className="mt-10 bg-gradient-to-r from-blue-50 to-teal-50 rounded-3xl shadow-lg p-6 text-center">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              ¿Quieres una cotización real del mercado?
-            </h2>
-
+          {/* CTA Card */}
+          <Card className="mt-8 bg-teal-50 text-center p-6 rounded-3xl">
+            <h2 className="font-semibold text-gray-900 mb-3">{t("calculator.realQuote")}</h2>
             <Button
-              className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:opacity-90 w-full text-lg font-bold"
-              size="lg"
-              onClick={() => window.open('https://www.searates.com/es/', '_blank')}
+              className="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white"
+              onClick={() => window.open("https://www.searates.com/es/", "_blank")}
             >
-            ESTIMACIÓN EN TIEMPO REAL
+              {t("calculator.liveEstimate")}
             </Button>
           </Card>
-
         </div>
       </div>
     </div>
   );
 };
-

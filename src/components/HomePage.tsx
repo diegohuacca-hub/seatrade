@@ -1,6 +1,3 @@
-// HomePage with applied color palette and typography
-// Fonts applied: Bobby Jones for titles, Bobby Jones Condensed for subtitles, Poppins for text
-
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,6 +10,7 @@ import {
   Globe2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface HomePageProps {
   setActiveTab: (tab: string) => void;
@@ -32,10 +30,12 @@ const teamMembers = [
 ];
 
 export const HomePage = ({ setActiveTab }: HomePageProps) => {
+  const { t, language } = useLanguage();
+
   return (
     <div className="min-h-screen bg-[#d2dfe5] font-poppins overflow-hidden">
 
-      {/* ───────────── HERO ───────────── */}
+      {/* HERO */}
       <section
         className="relative py-28 px-6 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/imagenes/img-inicio.jpg')" }}
@@ -56,35 +56,36 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
           >
             <Ship className="h-20 w-20 mx-auto md:mx-0 text-white" />
 
+            {/* Name stays unchanged */}
             <h1 className="text-4xl md:text-5xl font-bobby font-extrabold text-white drop-shadow-lg">
               Sea Trade Navigator
             </h1>
 
             <p className="text-lg md:text-xl text-white drop-shadow-md max-w-xl">
-              Plataforma Integral de Comercio Marítimo Internacional del Perú
+              {t("home.subtitle")}
             </p>
 
             <p className="text-sm md:text-base text-white/90 max-w-lg">
-              Explora rutas marítimas, puertos internacionales y facilita tu comercio exterior.
+              {t("home.description")}
             </p>
 
             <Button
               className="mt-4 bg-[#4f707b] text-white hover:bg-[#2c3e50] transition-all rounded-xl px-6 py-2"
               onClick={() => setActiveTab('mapa')}
             >
-              Comenzar
+              {t("home.start")}
             </Button>
           </motion.div>
         </div>
       </section>
 
-      {/* ─────────── EQUIPO ─────────── */}
+      {/* EQUIPO */}
       <motion.section className="max-w-6xl mx-auto px-6 py-10">
         <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center flex justify-center items-center gap-2">
-          <Users className="h-8 w-8 text-[#45616d]" /> Equipo del Proyecto
+          <Users className="h-8 w-8 text-[#45616d]" /> {t("home.team")}
         </h2>
 
-        {/* 🔥 NUEVO GRID RESPONSIVE SIN HUECOS */}
+        {/* Team grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-center">
           {teamMembers.map((member, idx) => (
             <Card
@@ -117,37 +118,37 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
         </div>
       </motion.section>
 
-      {/* ─────────── ASESOR ─────────── */}
+      {/* ASESOR */}
       <motion.section className="max-w-6xl mx-auto px-6 py-6">
-        <Card className="p-6 shadow-md border rounded-xl bg-[#b7c9d9] border-[#8da3b1]">
+        <Card className="p-6 shadow-md bg-[#b7c9d9] border border-[#8da3b1] rounded-xl">
           <div className="flex items-center gap-3 mb-4">
             <UserCheck className="h-8 w-8 text-[#45616d]" />
-            <h2 className="text-xl md:text-2xl font-bobby-condensed font-bold text-[#2c3e50]">Asesor del Proyecto</h2>
+            <h2 className="text-xl md:text-2xl font-bobby-condensed font-bold text-[#2c3e50]">
+              {t("home.advisor")}
+            </h2>
           </div>
           <p className="text-base font-semibold text-[#2c3e50]">Manuel Tejada Mandujano</p>
         </Card>
       </motion.section>
 
-      {/* ─────── FUNCIONES PRINCIPALES ─────── */}
+      {/* FEATURES */}
       <motion.section className="max-w-6xl mx-auto px-6 py-12">
-        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center">Funciones Principales</h2>
+        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center">{t("home.features")}</h2>
 
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { icon: Map, title: 'Mapa Interactivo', tab: 'mapa', text: 'Explora rutas marítimas en 3D/2D desde los puertos del Perú.' },
-            { icon: Anchor, title: 'Información de Puertos', tab: 'informacion', text: 'Datos completos de Callao, Paita y Chancay con recursos educativos.' },
-            { icon: Globe2, title: 'Comercio Internacional', tab: 'recursos', text: 'Guías, fichas país y herramientas para exportaciones.' }
+            { icon: Map, title: t("home.featureMap"), tab: "mapa", text: t("home.featureMapText") },
+            { icon: Anchor, title: t("home.featureInfo"), tab: "informacion", text: t("home.featureInfoText") },
+            { icon: Globe2, title: t("home.featureTrade"), tab: "recursos", text: t("home.featureTradeText") }
           ].map((feature, idx) => (
             <Card
               key={idx}
-              className="p-6 bg-[#d2dfe5] hover:bg-[#b9cdd5] border border-[#8da3b1] cursor-pointer shadow-sm rounded-xl transition-all"
+              className="p-6 bg-[#d2dfe5] hover:bg-[#b9cdd5] cursor-pointer border border-[#8da3b1] shadow-sm rounded-xl transition-all"
               onClick={() => setActiveTab(feature.tab)}
             >
               <div className="flex items-center gap-2 mb-3">
                 <feature.icon className="h-6 w-6 text-[#45616d]" />
-                <h3 className="text-xl font-bobby-condensed font-bold text-[#2c3e50]">
-                  {feature.title}
-                </h3>
+                <h3 className="text-xl font-bobby-condensed font-bold text-[#2c3e50]">{feature.title}</h3>
               </div>
               <p className="text-[#31454c] text-sm">{feature.text}</p>
             </Card>
@@ -155,26 +156,22 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
         </div>
       </motion.section>
 
-      {/* ───────── CONTACTO ───────── */}
+      {/* CONTACT */}
       <motion.section className="w-full bg-[#b7c9d9] border-t border-[#8da3b1] py-10 px-4">
         <div className="max-w-5xl mx-auto text-center space-y-4">
-          <h2 className="text-2xl font-bobby font-bold text-[#2c3e50]">Contáctanos</h2>
+          <h2 className="text-2xl font-bobby font-bold text-[#2c3e50]">{t("home.contactTitle")}</h2>
 
-          <p className="text-[#31454c] max-w-xl mx-auto text-sm">
-            Si tienes consultas o deseas solicitar una cotización, estaremos encantados de ayudarte.
-          </p>
+          <p className="text-[#31454c] max-w-xl mx-auto text-sm">{t("home.contactText")}</p>
 
           <motion.button
-            onClick={() => setActiveTab('contacto')}
+            onClick={() => setActiveTab("contacto")}
             className="mt-4 bg-[#4f707b] text-white px-4 py-2 text-sm rounded-lg shadow-md hover:bg-[#2c3e50] transition-all"
             whileHover={{ scale: 1.05 }}
           >
-            Ir al Formulario
+            {t("home.contactButton")}
           </motion.button>
         </div>
       </motion.section>
-
     </div>
   );
 };
-
