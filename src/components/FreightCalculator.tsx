@@ -18,6 +18,7 @@ export const FreightCalculator = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [containerType, setContainerType] = useState<"20" | "40">("20");
   const [incoterm, setIncoterm] = useState<"FOB" | "CIF">("FOB");
+  const [mode, setMode] = useState<"FCL" | "LCL">("LCL");
 
   const [result, setResult] = useState<{
     weightTons: number;
@@ -39,23 +40,13 @@ export const FreightCalculator = () => {
     const p = parseFloat(packages);
     const pc = parseFloat(productionCost);
 
-    if (!selectedCountry || isNaN(w) || w <= 0 || isNaN(p) || p <= 0) {
-      alert("⚠️ Complete los campos requeridos antes de calcular.");
+    if (!selectedCountry) {
+      alert("⚠️ Seleccione un país.");
       return;
     }
 
-    const widthValue = isNaN(wi) ? 1 : wi;
-    const heightValue = isNaN(h) ? 1 : h;
-    const lengthValue = isNaN(l) ? 1 : l;
-
     const weightTons = (w / 1000) * p;
-    const volumeM3 = widthValue * heightValue * lengthValue * p;
-    const stowageFactor = volumeM3 / weightTons;
-
-    const chargeableUnit: "weight" | "volume" = stowageFactor > 1 ? "volume" : "weight";
-
-    const chargeableValue =
-      chargeableUnit === "volume" ? volumeM3 : weightTons;
+    const volumeM3 = (isNaN(wi) ? 1 : wi) * (isNaN(h) ? 1 : h) * (isNaN(l) ? 1 : l) * p;
 
     const rateData = FREIGHT_RATES.find(
       (r) => normalize(r.country) === normalize(selectedCountry)
@@ -66,25 +57,66 @@ export const FreightCalculator = () => {
       return;
     }
 
-    const freightRate =
-      incoterm === "FOB"
-        ? containerType === "20"
-          ? rateData.fob20
-          : rateData.fob40
-        : containerType === "20"
-        ? rateData.cif20
-        : rateData.cif40;
+    // Capacidad real de contenedores estándar
+    const containerCapacity = {
+      "20": { maxVolume: 33.2, maxWeight: 28000 },
+      "40": { maxVolume: 67.7, maxWeight: 30000 },
+    };
 
-    const freightCost = chargeableValue * freightRate;
-    const totalCost = freightCost + (isNaN(pc) ? 0 : pc);
+    let freightCost = 0;
+
+    // ===============================
+    // 🚢 MODO FCL (CONTENEDOR ENTERO)
+    // ===============================
+    if (mode === "FCL") {
+      const capacity = containerCapacity[containerType];
+
+      if (volumeM3 > capacity.maxVolume) {
+        alert(`⚠ La carga NO cabe en un contenedor de ${containerType} pies.`);
+        return;
+      }
+
+      if (weightTons * 1000 > capacity.maxWeight) {
+        alert(`⚠ La carga excede el peso máximo permitido del contenedor.`);
+        return;
+      }
+
+      freightCost = incoterm === "FOB"
+        ? (containerType === "20" ? rateData.fob20 : rateData.fob40)
+        : (containerType === "20" ? rateData.cif20 : rateData.cif40);
+
+      setResult({
+        weightTons,
+        volumeM3,
+        stowageFactor: 0,
+        chargeableUnit: "weight",
+        freightCost,
+        totalCost: freightCost + (isNaN(pc) ? 0 : pc),
+      });
+
+      return;
+    }
+
+    // ===============================
+    // 📦 MODO LCL (CONSOLIDADO)
+    // ===============================
+    const stowageFactor = volumeM3 / weightTons;
+    const chargeable = Math.max(weightTons, volumeM3);
+
+    const rate =
+      incoterm === "FOB"
+        ? (containerType === "20" ? rateData.fob20 : rateData.fob40)
+        : (containerType === "20" ? rateData.cif20 : rateData.cif40);
+
+    freightCost = rate * chargeable;
 
     setResult({
       weightTons,
       volumeM3,
       stowageFactor,
-      chargeableUnit,
+      chargeableUnit: weightTons > volumeM3 ? "weight" : "volume",
       freightCost,
-      totalCost,
+      totalCost: freightCost + (isNaN(pc) ? 0 : pc),
     });
   };
 
@@ -98,6 +130,7 @@ export const FreightCalculator = () => {
     setSelectedCountry("");
     setContainerType("20");
     setIncoterm("FOB");
+    setMode("LCL");
     setResult(null);
   };
 
@@ -126,6 +159,20 @@ export const FreightCalculator = () => {
               </CardHeader>
 
               <CardContent className="space-y-6">
+
+                {/* Nuevo selector de modo */}
+                <div>
+                  <Label>Tipo de Servicio</Label>
+                  <Select value={mode} onValueChange={(v) => setMode(v as "FCL" | "LCL")}>
+                    <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
+                      <SelectValue placeholder="Seleccione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="LCL">Carga Parcial (LCL)</SelectItem>
+                      <SelectItem value="FCL">Contenedor Completo (FCL)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -217,11 +264,13 @@ export const FreightCalculator = () => {
                   <p>Volumen Total: {result.volumeM3.toFixed(3)} m³</p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-teal-50">
-                  <h3 className="font-semibold">Factor de Estiba</h3>
-                  <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
-                  <p>{result.chargeableUnit === "volume" ? "Se cobra por volumen" : "Se cobra por peso"}</p>
-                </div>
+                {mode === "LCL" && (
+                  <div className="p-4 rounded-xl bg-teal-50">
+                    <h3 className="font-semibold">Factor de Estiba</h3>
+                    <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
+                    <p>{result.chargeableUnit === "volume" ? "Se cobra por volumen" : "Se cobra por peso"}</p>
+                  </div>
+                )}
 
                 <div className="p-4 rounded-xl bg-blue-100">
                   <h3 className="font-semibold">Costos</h3>
@@ -237,7 +286,6 @@ export const FreightCalculator = () => {
             </Card>
           )}
 
-          {/* ⭐ Nuevo Card SIN ícono ⭐ */}
           <Card className="mt-8 bg-teal-50 text-center p-8 rounded-3xl shadow-lg border border-teal-200">
             <h2 className="font-extrabold text-gray-900 text-3xl tracking-wide mb-3">
               ¿Quieres precio real actualizado?

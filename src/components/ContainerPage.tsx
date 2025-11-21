@@ -6,6 +6,7 @@ import { Package, Thermometer } from "lucide-react";
 import { FREIGHT_RATES, CONTINENTS } from "@/data/freightRates";
 import { CONTAINER_DETAILS_CHANCAY } from "@/data/containerDetailsChancay";
 import { CONTAINER_DETAILS_CALLAO } from "@/data/containerDetailsCallao";
+import { CONTAINER_DETAILS_PAITA } from "@/data/containerDetailsPaita";
 import { Container3D } from "@/components/Container3D";
 
 export const ContainerPage = () => {
@@ -65,11 +66,14 @@ export const ContainerPage = () => {
 
     // Selección automática de dataset según destino
     const dataset =
-      destination === "Chancay"
-        ? CONTAINER_DETAILS_CHANCAY
-        : destination === "Callao"
-        ? CONTAINER_DETAILS_CALLAO
-        : [];
+  destination === "Chancay"
+    ? CONTAINER_DETAILS_CHANCAY
+    : destination === "Callao"
+    ? CONTAINER_DETAILS_CALLAO
+    : destination === "Paita"
+    ? CONTAINER_DETAILS_PAITA
+    : [];
+
 
     const match = dataset.find((d) => d.pais === origin && d.destino === destination);
 
