@@ -6,21 +6,17 @@ import { Package, Thermometer } from "lucide-react";
 import { FREIGHT_RATES, CONTINENTS } from "@/data/freightRates";
 import { CONTAINER_DETAILS_CHANCAY } from "@/data/containerDetailsChancay";
 import { CONTAINER_DETAILS_CALLAO } from "@/data/containerDetailsCallao";
-import { CONTAINER_DETAILS_PAITA } from "@/data/containerDetailsPaita";
 import { Container3D } from "@/components/Container3D";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export const ContainerPage = () => {
-  const { t } = useLanguage();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("Todos");
 
   const containerTypes = [
-    { name: t("containers.dv20"), icon: Package },
-    { name: t("containers.dv40"), icon: Package },
-    { name: t("containers.ref20"), icon: Thermometer },
-    { name: t("containers.ref40"), icon: Thermometer },
+    { name: "CONTENEDOR DRY-VAN 20'", icon: Package },
+    { name: "CONTENEDOR DRY-VAN 40'", icon: Package },
+    { name: "CONTENEDOR REEFER 20'", icon: Thermometer },
+    { name: "CONTENEDOR REEFER 40'", icon: Thermometer },
   ];
 
   const COUNTRY_LIST = [...new Set(FREIGHT_RATES.map((r) => r.country))];
@@ -28,6 +24,9 @@ export const ContainerPage = () => {
   const [selectedCountries, setSelectedCountries] = useState(containerTypes.map(() => ""));
   const [selectedDestinations, setSelectedDestinations] = useState(containerTypes.map(() => ""));
 
+  /** ==========================
+   * 🧠 Búsqueda inteligente
+   ============================*/
   const getFilteredCountries = (query: string) => {
     const normalized = query.toLowerCase().trim();
 
@@ -44,33 +43,37 @@ export const ContainerPage = () => {
     return normalized ? sorted.filter((c) => c.toLowerCase().includes(normalized)) : sorted;
   };
 
+  /** ==========================
+   * 📄 Tabla de tarifas
+   ============================*/
   const filteredRates = FREIGHT_RATES.filter((rate) => {
     const matchSearch =
       rate.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
       rate.port.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchContinent =
-      selectedContinent === t("containers.all") || rate.continent === selectedContinent;
+    const matchContinent = selectedContinent === "Todos" || rate.continent === selectedContinent;
 
     return matchSearch && matchContinent;
   });
 
+  /** ==========================
+   * 🚢 Abrir tarifa real por contenedor
+   ============================*/
   const handleOpenTariff = (idx: number, containerName: string) => {
     const origin = selectedCountries[idx];
     const destination = selectedDestinations[idx];
 
+    // Selección automática de dataset según destino
     const dataset =
       destination === "Chancay"
         ? CONTAINER_DETAILS_CHANCAY
         : destination === "Callao"
         ? CONTAINER_DETAILS_CALLAO
-        : destination === "Paita"
-        ? CONTAINER_DETAILS_PAITA
         : [];
 
     const match = dataset.find((d) => d.pais === origin && d.destino === destination);
 
-    if (!match) return alert(t("containers.noRoute"));
+    if (!match) return alert("⚠️ No hay tarifas registradas aún para esa ruta.");
 
     const isReefer = containerName.includes("REEFER");
     const size20 = containerName.includes("20");
@@ -88,43 +91,41 @@ export const ContainerPage = () => {
     if (cleanUrl && cleanUrl.startsWith("http")) {
       window.open(cleanUrl, "_blank");
     } else {
-      alert(t("containers.noLink"));
+      alert("⚠️ Enlace inválido o no disponible.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
+    <div className="min-h-screen bg-gray-50 py-12 px-6">
       <div className="max-w-7xl mx-auto space-y-12">
 
-        {/* ---- HEADER FIX ---- */}
-        <header className="text-center px-2">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500 whitespace-normal break-words">
-            {t("containers.title")}
+        {/* ================= HEADER ================= */}
+        <header className="text-center">
+          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500">
+            Contenedores Marítimos
           </h1>
-
-          <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto mt-4">
-            {t("containers.subtitle")}
-          </p>
+          <p className="text-gray-600 text-lg mt-2">Selecciona un contenedor, país de origen y puerto destino en Perú.</p>
         </header>
 
-        {/* ---- CONTAINER CARDS ---- */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* ================= TARJETAS DE CONTENEDORES ================= */}
+        <div className="grid md:grid-cols-2 gap-6">
           {containerTypes.map((container, idx) => {
             const Icon = container.icon;
 
             return (
               <Card key={idx} className="p-6 shadow-lg rounded-2xl bg-white">
-                <div className="flex gap-3 mb-3 items-center">
+                <div className="flex gap-3 mb-3">
                   <Icon className="text-teal-500 w-8 h-8" />
                   <h2 className="font-bold text-lg">{container.name}</h2>
                 </div>
 
                 <Container3D type={container.name.includes("20") ? "20" : "40"} isReefer={container.name.includes("REEFER")} />
-                <p className="text-xs text-gray-500 text-center">{t("containers.rotate")}</p>
+                <p className="text-xs text-gray-500 text-center">Rotar / Zoom</p>
 
-                <label className="block mt-4 font-semibold text-sm">{t("containers.origin")}</label>
+                {/* País origen */}
+                <label className="block mt-4 font-semibold text-sm">País de origen</label>
                 <Input
-                  placeholder={t("containers.originPH")}
+                  placeholder="Ejemplo: A → Argentina"
                   value={selectedCountries[idx]}
                   onChange={(e) => {
                     const updated = [...selectedCountries];
@@ -149,9 +150,10 @@ export const ContainerPage = () => {
                     </button>
                   ))}
 
-                <label className="block mt-4 font-semibold text-sm">{t("containers.destination")}</label>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {["callao", "chancay", "paita"].map((port) => (
+                {/* Botones puerto destino */}
+                <label className="block mt-4 font-semibold text-sm">Puerto destino en Perú</label>
+                <div className="flex gap-2 mt-2">
+                  {["Callao", "Chancay", "Paita"].map((port) => (
                     <button
                       key={port}
                       className={`px-4 py-2 rounded-md text-sm ${
@@ -163,80 +165,70 @@ export const ContainerPage = () => {
                         setSelectedDestinations(updated);
                       }}
                     >
-                      {t(`containers.dest.${port}`)}
+                      {port}
                     </button>
                   ))}
                 </div>
 
+                {/* Botón CTA */}
                 <button
                   onClick={() => handleOpenTariff(idx, container.name)}
                   className="mt-5 bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-lg font-semibold"
                 >
-                  {t("containers.viewRates")}
+                  Ver tarifas →
                 </button>
               </Card>
             );
           })}
         </div>
 
-        {/* ---- FREIGHT TABLE ---- */}
+        {/* ================= TABLA TARIFARIA ================= */}
         <Card className="p-6">
-          <h2 className="font-bold text-xl mb-4">{t("containers.tableTitle")}</h2>
+          <h2 className="font-bold text-xl mb-4">Tarifas Internacionales</h2>
 
-          <div className="flex flex-col md:flex-row gap-3 mb-4">
-            <Input placeholder={t("containers.searchPH")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-
+          <div className="flex gap-3 mb-4">
+            <Input placeholder="Buscar país o puerto..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             <Select value={selectedContinent} onValueChange={setSelectedContinent}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder={t("containers.selectContinent")} />
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Continente" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Todos">{t("containers.all")}</SelectItem>
                 {CONTINENTS.map((c) => (
                   <SelectItem key={c} value={c}>
-                    {t(`containers.continentName.${c}`) || c}
+                    {c}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left min-w-[650px]">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="p-2">{t("containers.country")}</th>
-                  <th className="p-2">{t("containers.port")}</th>
-                  <th className="p-2 text-center">{t("containers.fob20")}</th>
-                  <th className="p-2 text-center">{t("containers.fob40")}</th>
-                  <th className="p-2 text-center">{t("containers.cif20")}</th>
-                  <th className="p-2 text-center">{t("containers.cif40")}</th>
-                  <th className="p-2">{t("containers.continent")}</th>
+          <table className="w-full text-left">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-2">País</th>
+                <th className="p-2">Puerto</th>
+                <th className="p-2 text-center">FOB 20</th>
+                <th className="p-2 text-center">FOB 40</th>
+                <th className="p-2 text-center">CIF 20</th>
+                <th className="p-2 text-center">CIF 40</th>
+                <th className="p-2">Continente</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredRates.map((rate, i) => (
+                <tr key={i} className="border-b hover:bg-gray-50">
+                  <td className="p-2">{rate.country}</td>
+                  <td className="p-2">{rate.port}</td>
+                  <td className="p-2 text-center">${rate.fob20}</td>
+                  <td className="p-2 text-center">${rate.fob40}</td>
+                  <td className="p-2 text-center">${rate.cif20}</td>
+                  <td className="p-2 text-center">${rate.cif40}</td>
+                  <td className="p-2">{rate.continent}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredRates.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="text-center p-4 text-gray-500">
-                      {t("containers.noResults")}
-                    </td>
-                  </tr>
-                ) : (
-                  filteredRates.map((rate, i) => (
-                    <tr key={i} className="border-b hover:bg-gray-50">
-                      <td className="p-2">{rate.country}</td>
-                      <td className="p-2">{rate.port}</td>
-                      <td className="p-2 text-center">${rate.fob20}</td>
-                      <td className="p-2 text-center">${rate.fob40}</td>
-                      <td className="p-2 text-center">${rate.cif20}</td>
-                      <td className="p-2 text-center">${rate.cif40}</td>
-                      <td className="p-2">{t(`containers.continentName.${rate.continent}`) || rate.continent}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </Card>
       </div>
     </div>
