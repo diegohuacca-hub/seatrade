@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import es from "@/locales/es.json";
+import en from "@/locales/en.json";
 
-type Language = 'es' | 'en';
+type Language = "es" | "en";
 
 interface LanguageContextType {
   language: Language;
@@ -8,38 +10,25 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const translations: Record<Language, Record<string, string>> = {
-  es: {
-    'nav.inicio': 'INICIO',
-    'nav.mapa': 'MAPA',
-    'nav.informacion': 'INFORMACIÓN',
-    'nav.contenedores': 'CONTAINER Y FLETE',
-    'nav.recursos': 'RECURSOS',
-    'nav.calculadora': 'CALCULADORA',
-    'nav.contacto': 'CONTACTO',
-    'button.back': 'Volver al Inicio',
-    'button.language': 'Idioma',
-  },
-  en: {
-    'nav.inicio': 'HOME',
-    'nav.mapa': 'MAP',
-    'nav.informacion': 'INFORMATION',
-    'nav.contenedores': 'CONTAINERS & FREIGHT',
-    'nav.recursos': 'RESOURCES',
-    'nav.calculadora': 'CALCULATOR',
-    'nav.contacto': 'CONTACT',
-    'button.back': 'Back to Home',
-    'button.language': 'Language',
-  },
-};
+const translations = { es, en };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('es');
 
+  // 🔹 Recupera idioma guardado o usa español por defecto
+  const storedLang = localStorage.getItem("language") as Language | null;
+  const [language, setLanguageState] = useState<Language>(storedLang ?? "es");
+
+  // 🔹 Guarda idioma al cambiarlo
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem("language", lang);
+  };
+
+  // 🔹 Soporte para claves anidadas (ej: "infoPage.title")
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    return key.split(".").reduce((acc: any, part: string) => acc?.[part], translations[language]) || key;
   };
 
   return (
@@ -51,8 +40,6 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
+  if (!context) throw new Error("useLanguage must be used within a LanguageProvider");
   return context;
 };

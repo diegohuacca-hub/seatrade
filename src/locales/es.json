@@ -1,0 +1,85 @@
+{
+  "appTitle": "Sea Trade Navigator",
+
+  "nav": {
+    "inicio": "Inicio",
+    "mapa": "Mapa",
+    "informacion": "Información",
+    "contenedores": "Contenedores",
+    "recursos": "Recursos",
+    "calculadora": "Calculadora",
+    "contacto": "Contacto"
+  },
+
+  "homepage": {
+    "heroTitle": "Explora el comercio marítimo del Perú",
+    "heroDescription": "Información, rutas, mapas, puertos y herramientas para exportadores."
+  },
+
+  "infoPage": {
+    "title": "Puertos y Recursos del Perú",
+    "subtitle": "Descubre los principales puertos, herramientas y recursos marítimos en un solo sitio.",
+    "toolsTitle": "Herramientas en Tiempo Real",
+    "toolsSubtitle": "Accede a plataformas profesionales para visualizar tráfico marítimo global, rutas, barcos y contenedores en vivo.",
+    "traffic": "Tráfico marítimo",
+    "tracking": "Seguimiento de barcos y contenedores",
+    "official": "Sitio Oficial",
+    "satellite": "Vista Satelital"
+  },
+
+  "contactPage": {
+    "title": "Contáctanos"
+  },
+
+  "contact": {
+  "title": "Solicitud de Cotización",
+  "subtitle": "Completa el formulario y recibe una cotización personalizada para tus necesidades de comercio marítimo.",
+  "fullname": "Nombre Completo *",
+  "email": "Correo Electrónico *",
+  "phone": "Teléfono",
+  "company": "Empresa",
+  "origin": "Puerto de Origen",
+  "destination": "Puerto de Destino",
+  "type": "Tipo de Mercancía",
+  "message": "Mensaje / Detalles Adicionales *",
+  "submit": "Enviar Solicitud",
+
+  "successTitle": "Solicitud enviada",
+  "successMsg": "Nos pondremos en contacto contigo pronto.",
+
+  "placeholder": {
+    "name": "Juan Pérez",
+    "email": "correo@empresa.com",
+    "phone": "+51 999 999 999",
+    "company": "Empresa SAC",
+    "origin": "Callao, Paita o Chancay",
+    "destination": "Shanghai, Los Ángeles...",
+    "type": "Productos agrícolas, textiles...",
+    "message": "Describe tu carga, fechas, volumen, etc."
+  }
+},
+"containers": {
+  "title": "Contenedores Marítimos",
+  "subtitle": "Selecciona un contenedor, país de origen y puerto destino en Perú.",
+  "rotate": "Rotar / Zoom",
+  "origin": "País de origen",
+  "originPH": "Ejemplo: Argentina, Brasil...",
+  "destination": "Puerto destino en Perú",
+  "viewRates": "Ver tarifas →",
+  "country": "País",
+  "port": "Puerto",
+  "continent": "Continente",
+  "searchPH": "Buscar país o puerto...",
+  "tableTitle": "Tarifas Internacionales",
+  "noRoute": "⚠️ No hay tarifas registradas aún para esa ruta.",
+  "noLink": "⚠️ Enlace inválido o no disponible.",
+  "all": "Todos",
+
+  "dv20": "CONTENEDOR DRY-VAN 20'",
+  "dv40": "CONTENEDOR DRY-VAN 40'",
+  "ref20": "CONTENEDOR REEFER 20'",
+  "ref40": "CONTENEDOR REEFER 40'"
+}
+
+
+}

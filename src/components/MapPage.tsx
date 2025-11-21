@@ -18,6 +18,9 @@ export const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
 
+  // 🔹 Nuevo ref para detectar clic fuera del panel de búsqueda
+  const searchPanelRef = useRef<HTMLDivElement | null>(null);
+
   const [mapType, setMapType] = useState<'3d' | '2d'>('3d');
   const [originPort, setOriginPort] = useState<string>('callao');
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,6 +58,22 @@ export const MapPage = () => {
         return aName.localeCompare(bName);
       })
     : [];
+
+  // 🔹 Nuevo: ocultar filtros y sugerencias al hacer clic fuera del buscador
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchPanelRef.current &&
+        !searchPanelRef.current.contains(event.target as Node)
+      ) {
+        setShowFilters(false);
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Inicialización del mapa
   useEffect(() => {
@@ -209,7 +228,10 @@ export const MapPage = () => {
       <div ref={mapContainer} className="absolute inset-0" />
 
       {/* Panel buscador + filtros */}
-      <Card className="absolute top-4 left-4 w-80 bg-card/95 backdrop-blur-sm border-primary/20 shadow-elegant z-10 space-y-2 p-4">
+      <Card
+        ref={searchPanelRef} // 🔹 ref para detectar clic fuera
+        className="absolute top-4 left-4 w-80 bg-card/95 backdrop-blur-sm border-primary/20 shadow-elegant z-10 space-y-2 p-4"
+      >
         <div className="flex items-center gap-2">
           <Input
             placeholder="Buscar por país o puerto..."
@@ -298,24 +320,6 @@ export const MapPage = () => {
         )}
       </Card>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {/* Card de ruta */}
       <AnimatePresence>
         {routeData && (
@@ -383,121 +387,106 @@ export const MapPage = () => {
                   )}
                 </div>
 
+                {/* Información adicional: Links + Idioma */}
+                {routeData.countryInfo && (
+                  <div className="space-y-1 pt-2 border-t border-border">
+                    {/* 1️⃣ Ficha País */}
+                    {routeData.countryInfo.fichaUrl && (
+                      <a
+                        href={routeData.countryInfo.fichaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full justify-between text-xs md:text-sm border-primary/50 hover:bg-primary/10"
+                        >
+                          📘 Ficha País
+                        </Button>
+                      </a>
+                    )}
 
+                    {/* 2️⃣ Doing Business */}
+                    {routeData.countryInfo.doingBusinessUrl && (
+                      <a
+                        href={routeData.countryInfo.doingBusinessUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full justify-between text-xs md:text-sm border-secondary/50 hover:bg-secondary/10"
+                        >
+                          ⚖️ Doing Business
+                        </Button>
+                      </a>
+                    )}
 
+                    {/* 3️⃣ Tratados de Libre Comercio */}
+                    {routeData.countryInfo.tlc && (
+                      <a
+                        href={routeData.countryInfo.tlc}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full justify-between text-xs md:text-sm border-blue-600/60 hover:bg-blue-600/10"
+                        >
+                          🌍 Tratados de Libre Comercio
+                        </Button>
+                      </a>
+                    )}
 
+                    {/* 4️⃣ Reporte de Comercio Bilateral */}
+                    <a
+                      href="https://consultasenlinea.mincetur.gob.pe/Rep_Comer_Bilat/Comercio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full justify-between text-xs md:text-sm border-emerald-500/50 hover:bg-emerald-500/10"
+                      >
+                        📊 Reporte de Comercio Bilateral
+                      </Button>
+                    </a>
 
+                    {/* Idioma */}
+                    {routeData.countryInfo.idioma && (
+                      <div className="text-xs md:text-sm text-muted-foreground">
+                        <span className="font-medium">Idioma: </span>
+                        {routeData.countryInfo.idioma.join(', ')}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-{/* Información adicional: Links + Idioma */}
-{routeData.countryInfo && (
-  <div className="space-y-1 pt-2 border-t border-border">
+                {/* Moneda + Tipo de Cambio */}
+                {routeData.countryInfo?.currency && (
+                  <div className="flex items-center justify-between text-xs md:text-sm text-muted-foreground pt-1">
+                    <div>
+                      <span className="font-medium">Moneda: </span>
+                      {routeData.countryInfo.currency.name} ({routeData.countryInfo.currency.symbol})
+                    </div>
 
-    {/* 1️⃣ Ficha País */}
-    {routeData.countryInfo.fichaUrl && (
-      <a
-        href={routeData.countryInfo.fichaUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-between text-xs md:text-sm border-primary/50 hover:bg-primary/10"
-        >
-          📘 Ficha País
-        </Button>
-      </a>
-    )}
-
-    {/* 2️⃣ Doing Business */}
-    {routeData.countryInfo.doingBusinessUrl && (
-      <a
-        href={routeData.countryInfo.doingBusinessUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-between text-xs md:text-sm border-secondary/50 hover:bg-secondary/10"
-        >
-          ⚖️ Doing Business
-        </Button>
-      </a>
-    )}
-
-    
-
-    {/* 3️⃣ Tratados de Libre Comercio */}
-    {routeData.countryInfo.tlc && (
-      <a
-        href={routeData.countryInfo.tlc}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-between text-xs md:text-sm border-blue-600/60 hover:bg-blue-600/10"
-        >
-          🌍 Tratados de Libre Comercio
-        </Button>
-      </a>
-    )}
-
-    {/* 4️⃣ Reporte de Comercio Bilateral */}
-    <a
-      href="https://consultasenlinea.mincetur.gob.pe/Rep_Comer_Bilat/Comercio"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Button
-        variant="outline"
-        size="sm"
-        className="w-full justify-between text-xs md:text-sm border-emerald-500/50 hover:bg-emerald-500/10"
-      >
-        📊 Reporte de Comercio Bilateral
-      </Button>
-    </a>
-
-    {/* Idioma */}
-    {routeData.countryInfo.idioma && (
-      <div className="text-xs md:text-sm text-muted-foreground">
-        <span className="font-medium">Idioma: </span>
-        {routeData.countryInfo.idioma.join(', ')}
-      </div>
-    )}
-  </div>
-)}
-{/* Moneda + Tipo de Cambio */}
-{routeData.countryInfo.currency && (
-  <div className="flex items-center justify-between text-xs md:text-sm text-muted-foreground pt-1">
-    <div>
-      <span className="font-medium">Moneda: </span>
-      {routeData.countryInfo.currency.name} ({routeData.countryInfo.currency.symbol})
-    </div>
-
-    {/* Botón de tipo de cambio al lado */}
-    <a
-      href={`https://www.google.com/search?q=${routeData.countryInfo.currency.code}+a+sol+peruano`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="ml-2"
-    >
-      <button className="px-2 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-xs">
-        💱 Ver Cambio
-      </button>
-    </a>
-  </div>
-)}
-
-
-
-
-
-
-
-                
+                    {/* Botón de tipo de cambio al lado */}
+                    <a
+                      href={`https://www.google.com/search?q=${routeData.countryInfo.currency.code}+a+sol+peruano`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2"
+                    >
+                      <button className="px-2 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-xs">
+                        💱 Ver Cambio
+                      </button>
+                    </a>
+                  </div>
+                )}
 
                 {/* Cómo negociar / no negociar */}
                 {(routeData.countryInfo?.comoNegociar ||

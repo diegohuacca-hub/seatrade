@@ -6,9 +6,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const ContactPage = () => {
+  const { t } = useLanguage();
   const { toast } = useToast();
+
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -22,9 +25,10 @@ export const ContactPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     toast({
-      title: "Solicitud Enviada",
-      description: "Nos pondremos en contacto contigo pronto.",
+      title: t("contact.successTitle"),
+      description: t("contact.successMsg"),
     });
 
     setFormData({
@@ -54,34 +58,34 @@ export const ContactPage = () => {
         
         {/* Header */}
         <header className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 leading-tight">
-            Solicitud de Cotización
+          <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 leading-tight truncate">
+            {t("contact.title")}
           </h1>
-          <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto">
-            Completa el formulario y recibe una cotización personalizada para tus necesidades de comercio marítimo
+          <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto line-clamp-2">
+            {t("contact.subtitle")}
           </p>
         </header>
 
-        {/* SOLO FORMULARIO */}
+        {/* FORM */}
         <Card className="p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all">
           <form onSubmit={handleSubmit} className="space-y-6">
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="nombre" className="text-gray-800 font-semibold">Nombre Completo *</Label>
+                <Label htmlFor="nombre" className="text-gray-800 font-semibold">{t("contact.fullname")}</Label>
                 <Input
                   id="nombre"
                   name="nombre"
                   value={formData.nombre}
                   onChange={handleChange}
                   required
-                  placeholder="Juan Pérez"
+                  placeholder={t("contact.placeholder.name")}
                   className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-800 font-semibold">Correo Electrónico *</Label>
+                <Label htmlFor="email" className="text-gray-800 font-semibold">{t("contact.email")}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -89,7 +93,7 @@ export const ContactPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  placeholder="juan@empresa.com"
+                  placeholder={t("contact.placeholder.email")}
                   className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                 />
               </div>
@@ -97,25 +101,25 @@ export const ContactPage = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="telefono" className="text-gray-800 font-semibold">Teléfono</Label>
+                <Label htmlFor="telefono" className="text-gray-800 font-semibold">{t("contact.phone")}</Label>
                 <Input
                   id="telefono"
                   name="telefono"
                   value={formData.telefono}
                   onChange={handleChange}
-                  placeholder="+51 999 999 999"
+                  placeholder={t("contact.placeholder.phone")}
                   className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="empresa" className="text-gray-800 font-semibold">Empresa</Label>
+                <Label htmlFor="empresa" className="text-gray-800 font-semibold">{t("contact.company")}</Label>
                 <Input
                   id="empresa"
                   name="empresa"
                   value={formData.empresa}
                   onChange={handleChange}
-                  placeholder="Empresa SAC"
+                  placeholder={t("contact.placeholder.company")}
                   className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                 />
               </div>
@@ -123,51 +127,51 @@ export const ContactPage = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="puertoOrigen" className="text-gray-800 font-semibold">Puerto de Origen</Label>
+                <Label htmlFor="puertoOrigen" className="text-gray-800 font-semibold">{t("contact.origin")}</Label>
                 <Input
                   id="puertoOrigen"
                   name="puertoOrigen"
                   value={formData.puertoOrigen}
                   onChange={handleChange}
-                  placeholder="Callao, Paita o Chancay"
+                  placeholder={t("contact.placeholder.origin")}
                   className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="puertoDestino" className="text-gray-800 font-semibold">Puerto de Destino</Label>
+                <Label htmlFor="puertoDestino" className="text-gray-800 font-semibold">{t("contact.destination")}</Label>
                 <Input
                   id="puertoDestino"
                   name="puertoDestino"
                   value={formData.puertoDestino}
                   onChange={handleChange}
-                  placeholder="Shanghai, Los Ángeles, etc."
+                  placeholder={t("contact.placeholder.destination")}
                   className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tipoMercancia" className="text-gray-800 font-semibold">Tipo de Mercancía</Label>
+              <Label htmlFor="tipoMercancia" className="text-gray-800 font-semibold">{t("contact.type")}</Label>
               <Input
                 id="tipoMercancia"
                 name="tipoMercancia"
                 value={formData.tipoMercancia}
                 onChange={handleChange}
-                placeholder="Productos agrícolas, textiles, etc."
+                placeholder={t("contact.placeholder.type")}
                 className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="mensaje" className="text-gray-800 font-semibold">Mensaje / Detalles Adicionales *</Label>
+              <Label htmlFor="mensaje" className="text-gray-800 font-semibold">{t("contact.message")}</Label>
               <Textarea
                 id="mensaje"
                 name="mensaje"
                 value={formData.mensaje}
                 onChange={handleChange}
                 required
-                placeholder="Describe tus necesidades de envío, volumen estimado, fechas, etc."
+                placeholder={t("contact.placeholder.message")}
                 className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 min-h-36"
               />
             </div>
@@ -178,7 +182,7 @@ export const ContactPage = () => {
               size="lg"
             >
               <Send className="h-5 w-5 mr-2" />
-              Enviar Solicitud
+              {t("contact.submit")}
             </Button>
           </form>
         </Card>

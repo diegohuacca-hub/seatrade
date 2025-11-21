@@ -1,0 +1,86 @@
+{
+  "appTitle": "Sea Trade Navigator",
+
+  "nav": {
+    "inicio": "Home",
+    "mapa": "Map",
+    "informacion": "Information",
+    "contenedores": "Containers",
+    "recursos": "Resources",
+    "calculadora": "Calculator",
+    "contacto": "Contact"
+  },
+
+  "homepage": {
+    "heroTitle": "Explore Peru's Maritime Trade",
+    "heroDescription": "Information, routes, ports, maps and tools for exporters."
+  },
+
+  "infoPage": {
+    "title": "Ports and Maritime Resources of Peru",
+    "subtitle": "Explore Peru's main ports and real-time navigation tools.",
+    "toolsTitle": "Real-Time Tools",
+    "toolsSubtitle": "Access professional platforms to view live maritime traffic, routes, ships, and containers.",
+    "traffic": "Maritime Traffic",
+    "tracking": "Ship & Container Tracking",
+    "official": "Official Website",
+    "satellite": "Satellite View"
+  },
+
+  "contactPage": {
+    "title": "Contact Us"
+  },
+
+  "contact": {
+  "title": "Quotation Request",
+  "subtitle": "Fill out the form and receive a personalized shipping quote for your operation.",
+  "fullname": "Full Name *",
+  "email": "Email *",
+  "phone": "Phone",
+  "company": "Company",
+  "origin": "Port of Origin",
+  "destination": "Destination Port",
+  "type": "Cargo Type",
+  "message": "Message / Additional Details *",
+  "submit": "Send Request",
+
+  "successTitle": "Request Submitted",
+  "successMsg": "We will contact you soon.",
+
+  "placeholder": {
+    "name": "John Smith",
+    "email": "email@company.com",
+    "phone": "+1 555 555 555",
+    "company": "Company LLC",
+    "origin": "Callao, Paita or Chancay",
+    "destination": "Shanghai, Los Angeles...",
+    "type": "Agricultural goods, textiles...",
+    "message": "Describe your shipment, timeline, quantity, etc."
+  }
+},
+
+"containers": {
+  "title": "Shipping Containers",
+  "subtitle": "Select a container, origin country, and destination port in Peru.",
+  "rotate": "Rotate / Zoom",
+  "origin": "Country of Origin",
+  "originPH": "Example: Argentina, Brazil...",
+  "destination": "Destination Port in Peru",
+  "viewRates": "View Rates →",
+  "country": "Country",
+  "port": "Port",
+  "continent": "Continent",
+  "searchPH": "Search country or port...",
+  "tableTitle": "International Freight Rates",
+  "noRoute": "⚠️ No rates available for this route yet.",
+  "noLink": "⚠️ Link is invalid or unavailable.",
+  "all": "All",
+
+  "dv20": "20' DRY-VAN CONTAINER",
+  "dv40": "40' DRY-VAN CONTAINER",
+  "ref20": "20' REEFER CONTAINER",
+  "ref40": "40' REEFER CONTAINER"
+}
+
+
+}

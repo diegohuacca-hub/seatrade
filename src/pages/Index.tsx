@@ -39,12 +39,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+
       {/* Header */}
       {activeTab === 'inicio' ? (
-        // 🔹 Header especial para HomePage (solo idioma, sin título)
         <header className="bg-blue-600 shadow">
           <div className="max-w-7xl mx-auto px-4 py-3 flex justify-end">
-            {/* Selector de idioma */}
             <Button
               variant="secondary"
               size="sm"
@@ -56,7 +55,6 @@ const Index = () => {
           </div>
         </header>
       ) : (
-        // 🔹 Header normal para las demás vistas (título + idioma)
         <header className="bg-blue-600 shadow">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <h1 className="text-white text-xl font-bold">Sea Trade Navigator</h1>
@@ -72,17 +70,18 @@ const Index = () => {
         </header>
       )}
 
-      {/* 🔹 Barra de navegación (siempre visible) */}
+      {/* Navbar */}
       <nav className="bg-blue-500 shadow">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
-          {/* Menú escritorio */}
-          <ul className="hidden md:flex justify-center gap-4 whitespace-nowrap items-center flex-1">
+          
+          {/* Desktop Nav */}
+          <ul className="hidden md:flex justify-center gap-3 whitespace-nowrap items-center flex-1">
             {menuItems.map(item => (
               <li key={item.key}>
                 <Button
                   variant={activeTab === item.key ? 'default' : 'secondary'}
                   size="sm"
-                  className="flex items-center gap-1 min-w-max"
+                  className="w-nav truncate flex items-center justify-center"
                   onClick={() => setActiveTab(item.key)}
                 >
                   {item.icon} {item.label}
@@ -91,7 +90,7 @@ const Index = () => {
             ))}
           </ul>
 
-          {/* Botón hamburguesa móvil */}
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -100,7 +99,7 @@ const Index = () => {
           </button>
         </div>
 
-        {/* Menú móvil */}
+        {/* Mobile Menu */}
         {menuOpen && (
           <ul className="flex flex-col md:hidden gap-2 px-4 pb-2">
             {menuItems.map(item => (
@@ -108,7 +107,7 @@ const Index = () => {
                 <Button
                   variant={activeTab === item.key ? 'default' : 'secondary'}
                   size="sm"
-                  className="w-full flex items-center gap-2"
+                  className="w-full flex items-center justify-center truncate"
                   onClick={() => {
                     setActiveTab(item.key);
                     setMenuOpen(false);
@@ -122,29 +121,15 @@ const Index = () => {
         )}
       </nav>
 
-      {/* 🔹 Main Content con Tabs */}
+      {/* Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsContent value="inicio" className="m-0 focus-visible:outline-none">
-          <HomePage setActiveTab={setActiveTab} />
-        </TabsContent>
-        <TabsContent value="mapa" className="m-0 focus-visible:outline-none">
-          <MapPage />
-        </TabsContent>
-        <TabsContent value="informacion" className="m-0 focus-visible:outline-none">
-          <InfoPage />
-        </TabsContent>
-        <TabsContent value="contenedores" className="m-0 focus-visible:outline-none">
-          <ContainerPage />
-        </TabsContent>
-        <TabsContent value="recursos" className="m-0 focus-visible:outline-none">
-          <ResourcesPage />
-        </TabsContent>
-        <TabsContent value="calculadora" className="m-0 focus-visible:outline-none">
-          <FreightCalculator />
-        </TabsContent>
-        <TabsContent value="contacto" className="m-0 focus-visible:outline-none">
-          <ContactPage />
-        </TabsContent>
+        <TabsContent value="inicio"><HomePage setActiveTab={setActiveTab} /></TabsContent>
+        <TabsContent value="mapa"><MapPage /></TabsContent>
+        <TabsContent value="informacion"><InfoPage /></TabsContent>
+        <TabsContent value="contenedores"><ContainerPage /></TabsContent>
+        <TabsContent value="recursos"><ResourcesPage /></TabsContent>
+        <TabsContent value="calculadora"><FreightCalculator /></TabsContent>
+        <TabsContent value="contacto"><ContactPage /></TabsContent>
       </Tabs>
     </div>
   );
