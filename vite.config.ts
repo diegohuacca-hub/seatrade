@@ -39,7 +39,10 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg}'],
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB
+
+        // 👇 INCREMENTADO PARA EVITAR EL ERROR EN VERCEL
+        maximumFileSizeToCacheInBytes: 7 * 1024 * 1024, // 7MB
+
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.mapbox\.com\/.*/i,
@@ -48,7 +51,7 @@ export default defineConfig(({ mode }) => ({
               cacheName: 'mapbox-cache',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 días
               },
               cacheableResponse: {
                 statuses: [0, 200]
