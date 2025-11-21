@@ -1,0 +1,30 @@
+/* =======================
+   Tipografías Globales
+======================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+@font-face {
+  font-family: "Bobby Jones";
+  src: url("/fonts/BobbyJones-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Bobby Jones Condensed";
+  src: url("/fonts/BobbyJonesCondensed-Regular.woff2") format("woff2");
+}
+
+:root {
+  --font-title1: "Bobby Jones", serif;
+  --font-title2: "Bobby Jones Condensed", serif;
+  --font-body: "Poppins", sans-serif;
+}
+
+/* Uso global */
+body {
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
