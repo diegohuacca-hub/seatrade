@@ -130,13 +130,7 @@ export const FreightCalculator = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label>Peso (kg)</Label>
-                    <Input
-  type="number"
-  className="bg-white"
-  value={weight}
-  onChange={(e) => setWeight(e.target.value)}
-/>
-
+                    <Input type="number" className="bg-white" value={weight} onChange={(e) => setWeight(e.target.value)} />
                   </div>
                   <div>
                     <Label>Cantidad de Bultos</Label>
@@ -150,7 +144,6 @@ export const FreightCalculator = () => {
                   <div><Label>Largo (m)</Label><Input type="number" step="0.01" value={length} onChange={(e) => setLength(e.target.value)} /></div>
                 </div>
 
-                {/* --- 🔥 Select Mejorado --- */}
                 <div>
                   <Label>País de Destino</Label>
                   <Select value={selectedCountry} onValueChange={setSelectedCountry}>
@@ -158,10 +151,7 @@ export const FreightCalculator = () => {
                       <SelectValue placeholder="Seleccione un país" />
                     </SelectTrigger>
 
-                    <SelectContent
-                      side="bottom"
-                      className="bg-white border border-gray-200 shadow-xl rounded-xl max-h-60 overflow-auto"
-                    >
+                    <SelectContent className="bg-white border border-gray-200 shadow-xl rounded-xl max-h-60 overflow-auto">
                       {FREIGHT_RATES.map((rate) => (
                         <SelectItem
                           key={rate.country}
@@ -174,7 +164,6 @@ export const FreightCalculator = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                {/* -------------------------------- */}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -183,7 +172,7 @@ export const FreightCalculator = () => {
                       <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
                         <SelectValue placeholder="Seleccione" />
                       </SelectTrigger>
-                      <SelectContent side="bottom" className="bg-white shadow-lg rounded-lg">
+                      <SelectContent className="bg-white shadow-lg rounded-lg">
                         <SelectItem value="20">20 pies</SelectItem>
                         <SelectItem value="40">40 pies</SelectItem>
                       </SelectContent>
@@ -196,7 +185,7 @@ export const FreightCalculator = () => {
                       <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
                         <SelectValue placeholder="Seleccione" />
                       </SelectTrigger>
-                      <SelectContent side="bottom" className="bg-white shadow-lg rounded-lg">
+                      <SelectContent className="bg-white shadow-lg rounded-lg">
                         <SelectItem value="FOB">FOB</SelectItem>
                         <SelectItem value="CIF">CIF</SelectItem>
                       </SelectContent>
@@ -248,13 +237,21 @@ export const FreightCalculator = () => {
             </Card>
           )}
 
-          <Card className="mt-8 bg-teal-50 text-center p-6 rounded-3xl">
-            <h2 className="font-semibold text-gray-900 mb-3">¿Quieres cotización real en tiempo real?</h2>
+          {/* ⭐ Nuevo Card SIN ícono ⭐ */}
+          <Card className="mt-8 bg-teal-50 text-center p-8 rounded-3xl shadow-lg border border-teal-200">
+            <h2 className="font-extrabold text-gray-900 text-3xl tracking-wide mb-3">
+              ¿Quieres precio real actualizado?
+            </h2>
+
+            <p className="text-gray-700 text-lg mb-6 max-w-md mx-auto">
+              Obtén cotizaciones instantáneas basadas en rutas marítimas y costos reales.
+            </p>
+
             <Button
-              className="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white"
+              className="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white text-lg py-6 rounded-xl"
               onClick={() => window.open("https://www.searates.com/es/", "_blank")}
             >
-              🌍 Obtener precio real
+              Ver precios en tiempo real
             </Button>
           </Card>
         </div>
