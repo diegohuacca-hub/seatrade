@@ -1,3 +1,6 @@
+// HomePage with applied color palette and typography
+// Fonts applied: Bobby Jones for titles, Bobby Jones Condensed for subtitles, Poppins for text
+
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,12 +33,13 @@ const teamMembers = [
 ];
 
 export const HomePage = ({ setActiveTab }: HomePageProps) => {
-  const { t, language } = useLanguage();
+
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-[#d2dfe5] font-poppins overflow-hidden">
 
-      {/* HERO */}
+      {/* ───────────── HERO ───────────── */}
       <section
         className="relative py-28 px-6 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/imagenes/img-inicio.jpg')" }}
@@ -56,7 +60,6 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
           >
             <Ship className="h-20 w-20 mx-auto md:mx-0 text-white" />
 
-            {/* Name stays unchanged */}
             <h1 className="text-4xl md:text-5xl font-bobby font-extrabold text-white drop-shadow-lg">
               Sea Trade Navigator
             </h1>
@@ -65,12 +68,8 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
               {t("home.subtitle")}
             </p>
 
-            <p className="text-sm md:text-base text-white/90 max-w-lg">
-              {t("home.description")}
-            </p>
-
             <Button
-              className="mt-4 bg-[#4f707b] text-white hover:bg-[#2c3e50] transition-all rounded-xl px-6 py-2"
+              className="mt-4 bg-[#4f707b] text-white hover:bg-[#2c3e50] rounded-xl px-6 py-2 transition-all"
               onClick={() => setActiveTab('mapa')}
             >
               {t("home.start")}
@@ -79,48 +78,49 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
         </div>
       </section>
 
-      {/* EQUIPO */}
+      {/* ─────────── EQUIPO ─────────── */}
       <motion.section className="max-w-6xl mx-auto px-6 py-10">
-        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center flex justify-center items-center gap-2">
+        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-6 flex items-center gap-2">
           <Users className="h-8 w-8 text-[#45616d]" /> {t("home.team")}
         </h2>
 
-        {/* Team grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-center">
+        <div className="grid md:grid-cols-2 gap-4">
           {teamMembers.map((member, idx) => (
-            <Card
-              key={idx}
-              className="flex flex-col items-center text-center p-6 bg-[#a2c0cb] hover:bg-[#8bb1c1] transition-all rounded-2xl shadow-xl"
-            >
+            <Card key={idx} className="flex items-center justify-between p-4 bg-[#a2c0cb] hover:bg-[#8bb1c1] transition-all rounded-xl shadow-md">
+
+              <div>
+                <p className="font-semibold text-[#2c3e50]">{member.name}</p>
+
+                {/* 🔥 LinkedIn mejorado */}
+                {member.linkedin && (
+                  <motion.a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#0A66C2] hover:bg-[#0A66C2]/90 shadow-md transition-all"
+                    whileHover={{ scale: 1.18 }}
+                  >
+                    <Linkedin className="h-4 w-4 text-white" />
+                  </motion.a>
+                )}
+              </div>
+
+              {/* FOTO CUADRADA */}
               <motion.img
                 src={member.image}
                 alt={member.name}
-                className="w-32 h-32 object-cover rounded-xl border-2 border-[#45616d] shadow-md"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: 'spring', stiffness: 150 }}
+                className="w-20 h-20 rounded-xl object-cover border-2 border-[#45616d] shadow-md"
+                whileHover={{ scale: 1.08 }}
+                transition={{ type: "spring", stiffness: 150 }}
               />
-
-              <p className="font-semibold text-[#2c3e50] text-sm md:text-base mt-4">{member.name}</p>
-
-              {member.linkedin && (
-                <a
-                  href={member.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0A66C2] text-white text-xs font-medium shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 backdrop-blur-sm"
-                >
-                  <Linkedin className="h-4 w-4" />
-                  LinkedIn
-                </a>
-              )}
             </Card>
           ))}
         </div>
       </motion.section>
 
-      {/* ASESOR */}
+      {/* ─────────── ASESOR ─────────── */}
       <motion.section className="max-w-6xl mx-auto px-6 py-6">
-        <Card className="p-6 shadow-md bg-[#b7c9d9] border border-[#8da3b1] rounded-xl">
+        <Card className="p-6 shadow-md border rounded-xl bg-[#b7c9d9] border-[#8da3b1]">
           <div className="flex items-center gap-3 mb-4">
             <UserCheck className="h-8 w-8 text-[#45616d]" />
             <h2 className="text-xl md:text-2xl font-bobby-condensed font-bold text-[#2c3e50]">
@@ -131,7 +131,7 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
         </Card>
       </motion.section>
 
-      {/* FEATURES */}
+      {/* ─────── FEATURES ─────── */}
       <motion.section className="max-w-6xl mx-auto px-6 py-12">
         <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center">{t("home.features")}</h2>
 
@@ -143,12 +143,14 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
           ].map((feature, idx) => (
             <Card
               key={idx}
-              className="p-6 bg-[#d2dfe5] hover:bg-[#b9cdd5] cursor-pointer border border-[#8da3b1] shadow-sm rounded-xl transition-all"
+              className="p-6 bg-[#d2dfe5] hover:bg-[#b9cdd5] border border-[#8da3b1] cursor-pointer shadow-sm rounded-xl transition-all"
               onClick={() => setActiveTab(feature.tab)}
             >
               <div className="flex items-center gap-2 mb-3">
                 <feature.icon className="h-6 w-6 text-[#45616d]" />
-                <h3 className="text-xl font-bobby-condensed font-bold text-[#2c3e50]">{feature.title}</h3>
+                <h3 className="text-xl font-bobby-condensed font-bold text-[#2c3e50]">
+                  {feature.title}
+                </h3>
               </div>
               <p className="text-[#31454c] text-sm">{feature.text}</p>
             </Card>
@@ -156,15 +158,17 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
         </div>
       </motion.section>
 
-      {/* CONTACT */}
+      {/* ───────── CONTACTO ───────── */}
       <motion.section className="w-full bg-[#b7c9d9] border-t border-[#8da3b1] py-10 px-4">
         <div className="max-w-5xl mx-auto text-center space-y-4">
           <h2 className="text-2xl font-bobby font-bold text-[#2c3e50]">{t("home.contactTitle")}</h2>
 
-          <p className="text-[#31454c] max-w-xl mx-auto text-sm">{t("home.contactText")}</p>
+          <p className="text-[#31454c] max-w-xl mx-auto text-sm">
+            {t("home.contactText")}
+          </p>
 
           <motion.button
-            onClick={() => setActiveTab("contacto")}
+            onClick={() => setActiveTab('contacto')}
             className="mt-4 bg-[#4f707b] text-white px-4 py-2 text-sm rounded-lg shadow-md hover:bg-[#2c3e50] transition-all"
             whileHover={{ scale: 1.05 }}
           >
@@ -172,6 +176,7 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
           </motion.button>
         </div>
       </motion.section>
+
     </div>
   );
 };
