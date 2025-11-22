@@ -242,21 +242,20 @@ export const ContainerPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="text-sm sm:text-base"
             />
-            <Select
-              value={selectedContinent}
-              onValueChange={setSelectedContinent}
-            >
-              <SelectTrigger className="w-full sm:w-52 text-sm sm:text-base">
-                <SelectValue placeholder="Continente" />
-              </SelectTrigger>
-              <SelectContent>
-                {CONTINENTS.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select value={selectedContinent} onValueChange={setSelectedContinent}>
+  <SelectTrigger className="w-full sm:w-52 text-sm sm:text-base bg-white border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500">
+    <SelectValue placeholder="Continente" />
+  </SelectTrigger>
+
+  <SelectContent className="bg-white border border-gray-300 shadow-lg">
+    {CONTINENTS.map((c) => (
+      <SelectItem key={c} value={c}>
+        {c}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
           </div>
 
           {/* Tabla con scroll horizontal en móviles */}

@@ -17,6 +17,7 @@ const MAPBOX_TOKEN =
 export const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const searchCardRef = useRef<HTMLDivElement>(null);
 
   const [mapType, setMapType] = useState<'3d' | '2d'>('3d');
   const [originPort, setOriginPort] = useState<string>('callao');
@@ -71,7 +72,7 @@ export const MapPage = () => {
       bearing: 0,
       attributionControl: false
     });
-
+    
     map.current.addControl(
       new mapboxgl.NavigationControl({ visualizePitch: true }),
       'bottom-right'
@@ -115,6 +116,26 @@ export const MapPage = () => {
     return () => map.current?.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+  searchCardRef.current &&
+  !searchCardRef.current.contains(event.target as Node) &&
+  !(event.target as HTMLElement).closest('[data-radix-popper-content-wrapper]')
+) {
+  setShowFilters(false);
+  setShowSuggestions(false);
+}
+
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   // Cambiar tipo de mapa (2D / 3D)
   useEffect(() => {
@@ -209,7 +230,11 @@ export const MapPage = () => {
       <div ref={mapContainer} className="absolute inset-0" />
 
       {/* Panel buscador + filtros */}
-      <Card className="absolute top-4 left-4 w-80 bg-card/95 backdrop-blur-sm border-primary/20 shadow-elegant z-10 space-y-2 p-4">
+<Card
+  ref={searchCardRef}
+  className="absolute top-4 left-4 w-80 bg-card/95 backdrop-blur-sm border-primary/20 shadow-elegant z-10 space-y-2 p-4"
+>
+
         <div className="flex items-center gap-2">
           <Input
             placeholder="Buscar por país o puerto..."
@@ -241,10 +266,12 @@ export const MapPage = () => {
                 <Anchor className="h-4 w-4 text-accent" /> Puerto de Origen
               </label>
               <Select value={originPort} onValueChange={setOriginPort}>
-                <SelectTrigger className="w-full bg-background border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-popover border-border">
+                <SelectTrigger className="w-full bg-white border border-border rounded-md shadow-sm">
+  <SelectValue />
+</SelectTrigger>
+
+<SelectContent className="bg-white border border-border shadow-lg">
+
                   <SelectItem value="callao">Puerto del Callao</SelectItem>
                   <SelectItem value="paita">Puerto de Paita</SelectItem>
                   <SelectItem value="chancay">Puerto de Chancay</SelectItem>
@@ -253,22 +280,21 @@ export const MapPage = () => {
             </div>
 
             <div className="flex flex-col space-y-1">
-              <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                <Globe2 className="h-4 w-4 text-secondary" /> Tipo de Mapa
-              </label>
-              <Select
-                value={mapType}
-                onValueChange={(v) => setMapType(v as '3d' | '2d')}
-              >
-                <SelectTrigger className="w-full bg-background border-border">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-popover border-border">
-                  <SelectItem value="3d">Mapa 3D</SelectItem>
-                  <SelectItem value="2d">Mapa 2D</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+  <label className="text-sm font-medium text-foreground flex items-center gap-2">
+    <Globe2 className="h-4 w-4 text-secondary" /> Tipo de Mapa
+  </label>
+  <Select value={mapType} onValueChange={(v) => setMapType(v as '3d' | '2d')}>
+    <SelectTrigger className="w-full bg-white border border-border rounded-md shadow-sm">
+      <SelectValue />
+    </SelectTrigger>
+
+    <SelectContent className="bg-white border border-border shadow-lg">
+      <SelectItem value="3d">Mapa 3D</SelectItem>
+      <SelectItem value="2d">Mapa 2D</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
           </div>
         )}
 
