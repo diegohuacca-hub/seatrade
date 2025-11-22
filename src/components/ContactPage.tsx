@@ -53,26 +53,26 @@ export const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-6 md:px-12">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4 sm:px-6 md:px-12">
+      <div className="max-w-4xl mx-auto space-y-10">
         
         {/* Header */}
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 leading-tight truncate">
+        <header className="text-center space-y-4 px-2">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 leading-tight">
             {t("contact.title")}
           </h1>
-          <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto line-clamp-2">
+          <p className="text-gray-700 text-base sm:text-lg md:text-xl max-w-3xl mx-auto">
             {t("contact.subtitle")}
           </p>
         </header>
 
         {/* FORM */}
-        <Card className="p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all">
+        <Card className="p-6 sm:p-8 bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all">
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="nombre" className="text-gray-800 font-semibold">{t("contact.fullname")}</Label>
+                <Label htmlFor="nombre" className="font-semibold">{t("contact.fullname")}</Label>
                 <Input
                   id="nombre"
                   name="nombre"
@@ -80,12 +80,12 @@ export const ContactPage = () => {
                   onChange={handleChange}
                   required
                   placeholder={t("contact.placeholder.name")}
-                  className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  className="bg-gray-100 border-gray-300 focus:border-teal-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-800 font-semibold">{t("contact.email")}</Label>
+                <Label htmlFor="email" className="font-semibold">{t("contact.email")}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -94,77 +94,77 @@ export const ContactPage = () => {
                   onChange={handleChange}
                   required
                   placeholder={t("contact.placeholder.email")}
-                  className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  className="bg-gray-100 border-gray-300 focus:border-teal-500"
                 />
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="telefono" className="text-gray-800 font-semibold">{t("contact.phone")}</Label>
+                <Label htmlFor="telefono" className="font-semibold">{t("contact.phone")}</Label>
                 <Input
                   id="telefono"
                   name="telefono"
                   value={formData.telefono}
                   onChange={handleChange}
                   placeholder={t("contact.placeholder.phone")}
-                  className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  className="bg-gray-100 border-gray-300 focus:border-teal-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="empresa" className="text-gray-800 font-semibold">{t("contact.company")}</Label>
+                <Label htmlFor="empresa" className="font-semibold">{t("contact.company")}</Label>
                 <Input
                   id="empresa"
                   name="empresa"
                   value={formData.empresa}
                   onChange={handleChange}
                   placeholder={t("contact.placeholder.company")}
-                  className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  className="bg-gray-100 border-gray-300 focus:border-teal-500"
                 />
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="puertoOrigen" className="text-gray-800 font-semibold">{t("contact.origin")}</Label>
+                <Label htmlFor="puertoOrigen" className="font-semibold">{t("contact.origin")}</Label>
                 <Input
                   id="puertoOrigen"
                   name="puertoOrigen"
                   value={formData.puertoOrigen}
                   onChange={handleChange}
                   placeholder={t("contact.placeholder.origin")}
-                  className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  className="bg-gray-100 border-gray-300 focus:border-teal-500"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="puertoDestino" className="text-gray-800 font-semibold">{t("contact.destination")}</Label>
+                <Label htmlFor="puertoDestino" className="font-semibold">{t("contact.destination")}</Label>
                 <Input
                   id="puertoDestino"
                   name="puertoDestino"
                   value={formData.puertoDestino}
                   onChange={handleChange}
                   placeholder={t("contact.placeholder.destination")}
-                  className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  className="bg-gray-100 border-gray-300 focus:border-teal-500"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tipoMercancia" className="text-gray-800 font-semibold">{t("contact.type")}</Label>
+              <Label htmlFor="tipoMercancia" className="font-semibold">{t("contact.type")}</Label>
               <Input
                 id="tipoMercancia"
                 name="tipoMercancia"
                 value={formData.tipoMercancia}
                 onChange={handleChange}
                 placeholder={t("contact.placeholder.type")}
-                className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                className="bg-gray-100 border-gray-300 focus:border-teal-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="mensaje" className="text-gray-800 font-semibold">{t("contact.message")}</Label>
+              <Label htmlFor="mensaje" className="font-semibold">{t("contact.message")}</Label>
               <Textarea
                 id="mensaje"
                 name="mensaje"
@@ -172,14 +172,13 @@ export const ContactPage = () => {
                 onChange={handleChange}
                 required
                 placeholder={t("contact.placeholder.message")}
-                className="bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 min-h-36"
+                className="bg-gray-100 border-gray-300 focus:border-teal-500 min-h-40 text-base"
               />
             </div>
 
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:opacity-90 transition-all"
-              size="lg"
+              className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white text-base sm:text-lg py-3 rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg"
             >
               <Send className="h-5 w-5 mr-2" />
               {t("contact.submit")}
