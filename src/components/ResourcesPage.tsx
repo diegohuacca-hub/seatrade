@@ -36,9 +36,9 @@ const resources = [
     icon: <FileText className="h-8 w-8 text-teal-500" />,
     items: [
       {
-        title: 'Guía de Exportación - SUNAT',
-        description: 'Procedimientos oficiales para exportar desde Perú',
-        url: 'https://www.sunat.gob.pe'
+        title: 'Guía de uso - Vuce',
+        description: 'Aprende a usar vuce',
+        url: 'https://www.canva.com/design/DAG5pt9zWGw/WycO7ACFimXg01tG9-368A/edit'
       },
       {
         title: 'VUCE - Ventanilla Única',
