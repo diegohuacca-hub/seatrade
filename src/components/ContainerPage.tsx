@@ -242,7 +242,7 @@ export const ContainerPage = () => {
               <SelectTrigger className="w-56">
                 <SelectValue placeholder="Continente" />
               </SelectTrigger>
-              <SelectContent>
+                <SelectContent className="bg-white border border-gray-200 shadow-lg">
                 {CONTINENTS.map((c) => (
                   <SelectItem key={c} value={c}>
                     {c}
