@@ -13,7 +13,7 @@ export const FreightCalculator = () => {
   const [width, setWidth] = useState<string>("");
   const [height, setHeight] = useState<string>("");
   const [length, setLength] = useState<string>("");
-  const [packages, setPackages] = useState<string>("1");
+  const [packages, setPackages] = useState<string>("");
   const [productionCost, setProductionCost] = useState<string>("");
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [containerType, setContainerType] = useState<"20" | "40">("20");
@@ -32,13 +32,16 @@ export const FreightCalculator = () => {
   const normalize = (str: string) =>
     str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+  const safeNumber = (value: string | number) =>
+    Number(String(value || "0").replace(/,/g, ""));
+
   const calculateFreight = () => {
     const w = parseFloat(weight);
     const wi = parseFloat(width);
     const h = parseFloat(height);
     const l = parseFloat(length);
     const p = parseFloat(packages);
-    const pc = parseFloat(productionCost);
+    const pc = safeNumber(productionCost);
 
     if (!selectedCountry) {
       alert("⚠️ Seleccione un país.");
@@ -57,16 +60,17 @@ export const FreightCalculator = () => {
       return;
     }
 
-    // Capacidad real de contenedores estándar
     const containerCapacity = {
       "20": { maxVolume: 33.2, maxWeight: 28000 },
       "40": { maxVolume: 67.7, maxWeight: 30000 },
     };
 
     let freightCost = 0;
+    const stowageFactor = volumeM3 / weightTons;
+    const chargeableUnit = weightTons > volumeM3 ? "weight" : "volume";
 
     // ===============================
-    // 🚢 MODO FCL (CONTENEDOR ENTERO)
+    // 🚢 MODO FCL (CONTENEDOR COMPLETO)
     // ===============================
     if (mode === "FCL") {
       const capacity = containerCapacity[containerType];
@@ -81,26 +85,25 @@ export const FreightCalculator = () => {
         return;
       }
 
-      freightCost = incoterm === "FOB"
-        ? (containerType === "20" ? rateData.fob20 : rateData.fob40)
-        : (containerType === "20" ? rateData.cif20 : rateData.cif40);
+      freightCost =
+        incoterm === "FOB"
+          ? (containerType === "20" ? rateData.fob20 : rateData.fob40)
+          : (containerType === "20" ? rateData.cif20 : rateData.cif40);
 
       setResult({
         weightTons,
         volumeM3,
-        stowageFactor: 0,
-        chargeableUnit: "weight",
-        freightCost,
-        totalCost: freightCost + (isNaN(pc) ? 0 : pc),
+        stowageFactor,
+        chargeableUnit,
+        freightCost: Number(freightCost.toFixed(2)),
+        totalCost: Number(freightCost.toFixed(2)) + Number(pc.toFixed(2)),
       });
-
       return;
     }
 
     // ===============================
     // 📦 MODO LCL (CONSOLIDADO)
     // ===============================
-    const stowageFactor = volumeM3 / weightTons;
     const chargeable = Math.max(weightTons, volumeM3);
 
     const rate =
@@ -114,25 +117,16 @@ export const FreightCalculator = () => {
       weightTons,
       volumeM3,
       stowageFactor,
-      chargeableUnit: weightTons > volumeM3 ? "weight" : "volume",
-      freightCost,
-      totalCost: freightCost + (isNaN(pc) ? 0 : pc),
+      chargeableUnit,
+      freightCost: Number(freightCost.toFixed(2)),
+      totalCost: Number(freightCost.toFixed(2)) + Number(pc.toFixed(2)),
     });
   };
 
   const resetCalculator = () => {
-    setWeight("");
-    setWidth("");
-    setHeight("");
-    setLength("");
-    setPackages("1");
-    setProductionCost("");
-    setSelectedCountry("");
-    setContainerType("20");
-    setIncoterm("FOB");
-    setMode("LCL");
-    setResult(null);
-  };
+  setResult(null); // solo limpia los resultados, los inputs quedan igual
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 md:px-12">
@@ -159,19 +153,19 @@ export const FreightCalculator = () => {
               </CardHeader>
 
               <CardContent className="space-y-6">
-
-                {/* Nuevo selector de modo */}
                 <div>
                   <Label>Tipo de Servicio</Label>
-                  <Select value={mode} onValueChange={(v) => setMode(v as "FCL" | "LCL")}>
-                    <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="LCL">Carga Parcial (LCL)</SelectItem>
-                      <SelectItem value="FCL">Contenedor Completo (FCL)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <Select value={mode} onValueChange={(v) => setMode(v as "FCL" | "LCL")}>
+                  <SelectTrigger className="bg-white border border-gray-300 rounded-xl shadow-sm px-3 py-3">
+                    <SelectValue placeholder="Seleccione" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-white border border-gray-200 shadow-xl rounded-xl">
+                    <SelectItem value="LCL">Carga Parcial (LCL)</SelectItem>
+                    <SelectItem value="FCL">Contenedor Completo (FCL)</SelectItem>
+                  </SelectContent>
+                </Select>
+
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -242,7 +236,7 @@ export const FreightCalculator = () => {
 
                 <div>
                   <Label>Costo Total de Producción (USD)</Label>
-                  <Input placeholder="10000" type="number" value={productionCost} onChange={(e) => setProductionCost(e.target.value)} />
+                  <Input placeholder="" type="number" value={productionCost} onChange={(e) => setProductionCost(e.target.value)} />
                 </div>
 
                 <Button onClick={calculateFreight} className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white">
@@ -264,18 +258,23 @@ export const FreightCalculator = () => {
                   <p>Volumen Total: {result.volumeM3.toFixed(3)} m³</p>
                 </div>
 
-                {mode === "LCL" && (
-                  <div className="p-4 rounded-xl bg-teal-50">
-                    <h3 className="font-semibold">Factor de Estiba</h3>
-                    <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
+                {/* FACTOR DE ESTIBA (Visible en ambos modos) */}
+                <div className="p-4 rounded-xl bg-teal-50">
+                  <h3 className="font-semibold">Factor de Estiba</h3>
+                  <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
+                  {mode === "LCL" ? (
                     <p>{result.chargeableUnit === "volume" ? "Se cobra por volumen" : "Se cobra por peso"}</p>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-gray-600 text-sm">
+                      Referencia técnica: en FCL el cobro es fijo por contenedor.
+                    </p>
+                  )}
+                </div>
 
                 <div className="p-4 rounded-xl bg-blue-100">
                   <h3 className="font-semibold">Costos</h3>
                   <p>Flete: USD ${result.freightCost.toFixed(2)}</p>
-                  {!!productionCost && <p>Producción: USD ${parseFloat(productionCost).toFixed(2)}</p>}
+                  {!!productionCost && <p>Producción: USD ${safeNumber(productionCost).toFixed(2)}</p>}
                   <h3 className="font-bold text-xl text-teal-600">Total: USD ${result.totalCost.toFixed(2)}</h3>
                 </div>
 
