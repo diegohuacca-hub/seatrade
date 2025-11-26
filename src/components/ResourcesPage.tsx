@@ -36,7 +36,7 @@ const resources = [
     icon: <FileText className="h-8 w-8 text-teal-500" />,
     items: [
       {
-        title: 'Guía de Uso - Vuce',
+        title: 'Guía de uso - VUCE',
         description: 'Aprende a usar vuce',
         url: 'https://www.canva.com/design/DAG5pt9zWGw/FnKKc2wjpiJTkivAbLuGew/view?utm_content=DAG5pt9zWGw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h431c49898a'
       },
