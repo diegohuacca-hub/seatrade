@@ -72,7 +72,7 @@ function AppWithRouter() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!hideChatbot && <MaritimeChatBot />}
+{/* {!hideChatbot && <MaritimeChatBot />} */}
     </>
   );
 }

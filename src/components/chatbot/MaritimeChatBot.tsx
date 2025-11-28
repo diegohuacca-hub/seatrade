@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import { Send, MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Send, MessageCircle, Trash } from "lucide-react";
 import { chatbotData } from "@/data/chatbotData";
+
+const STORAGE_KEY = "nautilus_chat_history";
 
 const intentRoutes: any = {
   calculator: ["calcular", "tarifa", "flete", "precio", "costos"],
@@ -11,36 +13,29 @@ const intentRoutes: any = {
 };
 
 export const MaritimeChatBot = () => {
-
   const [open, setOpen] = useState(true);
   const [typing, setTyping] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: "bot", text: "👋 Hola, soy <b>Nautilus</b>, tu asistente marítimo.<br>¿Qué deseas saber?" }
-  ]);
+
+  const [messages, setMessages] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored
+      ? JSON.parse(stored)
+      : [
+          {
+            id: Date.now(),
+            role: "bot",
+            text: "👋 Hola, soy <b>Nautilus</b>, tu asistente marítimo.<br>¿Qué deseas saber?"
+          }
+        ];
+  });
 
   const [input, setInput] = useState("");
-  const chatRef = useRef<any>(null);
-  const dragPos = useRef({ x: 0, y: 0 });
+  const [selectedMsg, setSelectedMsg] = useState<number | null>(null);
 
-  // ---------- DRAG SYSTEM ----------
-  const startDrag = (e: any) => {
-    if (!chatRef.current) return;
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
 
-    const startX = e.clientX - dragPos.current.x;
-    const startY = e.clientY - dragPos.current.y;
-
-    const move = (ev: any) => {
-      dragPos.current = { x: ev.clientX - startX, y: ev.clientY - startY };
-      chatRef.current.style.transform = `translate(${dragPos.current.x}px, ${dragPos.current.y}px)`;
-    };
-
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", () => {
-      window.removeEventListener("mousemove", move);
-    });
-  };
-
-  // ---------- SEARCH KNOWLEDGE ----------
   const searchKnowledge = (msg: string) => {
     const low = msg.toLowerCase();
     for (const item of chatbotData) {
@@ -57,11 +52,19 @@ export const MaritimeChatBot = () => {
     return null;
   };
 
-  // ---------- SEND MESSAGE ----------
+  const deleteMessage = (id: number) => {
+    setMessages(prev => prev.filter(msg => msg.id !== id));
+    setSelectedMsg(null);
+  };
+
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    setMessages(prev => [...prev.slice(-29), { role: "user", text: input }]);
+    setMessages(prev => [
+      ...prev.slice(-29),
+      { id: Date.now(), role: "user", text: input }
+    ]);
+
     setTyping(true);
 
     const reply = searchKnowledge(input);
@@ -70,31 +73,29 @@ export const MaritimeChatBot = () => {
     setTimeout(() => {
       setTyping(false);
 
-      if (reply) {
-        setMessages(prev => [...prev.slice(-29), { role: "bot", text: reply }]);
-      } else {
-        setMessages(prev => [
-          ...prev.slice(-29),
-          {
-            role: "bot",
-            text: `No tengo esa respuesta aún, pero estoy aprendiendo.<br><br>
-                  Para tener mayor informacion presiona aqui:<br>
+      setMessages(prev => [
+        ...prev.slice(-29),
+        {
+          id: Date.now(),
+          role: "bot",
+          text:
+            reply ||
+            `No tengo esa respuesta aún.<br><br>
+            Para tener mayor información presiona aquí:<br>
             <button data-action="contact" class="chatbot-btn-contact">📞 Contactar</button>`
-          }
-        ]);
-      }
+        }
+      ]);
 
       if (route) {
-        window.dispatchEvent(new CustomEvent("assistant:navigate", { detail: { view: route } }));
+        window.dispatchEvent(
+          new CustomEvent("assistant:navigate", { detail: { view: route } })
+        );
       }
-
     }, 600);
 
     setInput("");
   };
 
-
-  // --------- LISTENER FOR BUTTON ---------
   useEffect(() => {
     const handler = (e: any) => {
       if (e.target?.dataset?.action === "contact") {
@@ -108,11 +109,10 @@ export const MaritimeChatBot = () => {
     return () => document.removeEventListener("click", handler);
   }, []);
 
-
   return (
     <>
       {!open && (
-        <button 
+        <button
           onClick={() => setOpen(true)}
           className="fixed bottom-5 right-5 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
         >
@@ -122,28 +122,42 @@ export const MaritimeChatBot = () => {
 
       {open && (
         <div
-          ref={chatRef}
           className="fixed bottom-6 right-6 bg-white border shadow-xl rounded-xl flex flex-col overflow-hidden"
-          onMouseDown={startDrag}
           style={{
-            width: window.innerWidth < 450 ? "70vw" : "260px",
-            height: window.innerWidth < 450 ? "55vh" : "50vh",
-            transform: `translate(${dragPos.current.x}px, ${dragPos.current.y}px)`
+            width: window.innerWidth < 450 ? "75vw" : "260px",
+            height: window.innerWidth < 450 ? "60vh" : "50vh"
           }}
         >
           {/* HEADER */}
           <div className="bg-blue-600 text-white p-2 flex justify-between items-center">
             <span className="font-bold">⚓ Nautilus</span>
-            <button className="hover:text-red-500 text-lg" onClick={() => setOpen(false)}>✕</button>
+            <button
+              className="hover:text-red-500 text-lg"
+              onClick={() => setOpen(false)}
+            >
+              ✕
+            </button>
           </div>
 
-          {/* MESSAGES */}
-          <div id="chat-scroll" className="flex-1 overflow-y-auto p-3 bg-gray-100 space-y-2">
-            {messages.map((m, i) => (
-              <div key={i} className={`p-2 rounded-lg text-sm max-w-[80%] break-words ${
-                m.role === "bot" ? "bg-blue-200" : "bg-green-200 ml-auto"
-              }`}>
+          {/* CHAT */}
+          <div className="flex-1 overflow-y-auto p-3 bg-gray-100 space-y-2">
+            {messages.map((m) => (
+              <div
+                key={m.id}
+                onClick={() => setSelectedMsg(m.id)}
+                className={`relative p-2 rounded-lg text-sm max-w-[80%] break-words cursor-pointer ${
+                  m.role === "bot" ? "bg-blue-200" : "bg-green-200 ml-auto"
+                }`}
+              >
                 <span dangerouslySetInnerHTML={{ __html: m.text }} />
+                {selectedMsg === m.id && (
+                  <button
+                    className="absolute -top-2 -right-2 bg-red-600 text-white text-xs p-1 rounded-full shadow-md hover:bg-red-700"
+                    onClick={() => deleteMessage(m.id)}
+                  >
+                    🗑
+                  </button>
+                )}
               </div>
             ))}
             {typing && <div className="text-gray-500 text-xs">Nautilus está escribiendo...</div>}
