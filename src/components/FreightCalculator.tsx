@@ -57,7 +57,6 @@ export const FreightCalculator = () => {
       return;
     }
 
-    // Capacidad real de contenedores estándar
     const containerCapacity = {
       "20": { maxVolume: 33.2, maxWeight: 28000 },
       "40": { maxVolume: 67.7, maxWeight: 30000 },
@@ -65,9 +64,7 @@ export const FreightCalculator = () => {
 
     let freightCost = 0;
 
-    // ===============================
-    // 🚢 MODO FCL (CONTENEDOR ENTERO)
-    // ===============================
+    // 🔹 FCL ahora calcula igual que LCL, solo validación del contenedor
     if (mode === "FCL") {
       const capacity = containerCapacity[containerType];
 
@@ -81,15 +78,21 @@ export const FreightCalculator = () => {
         return;
       }
 
-      freightCost = incoterm === "FOB"
-        ? (containerType === "20" ? rateData.fob20 : rateData.fob40)
-        : (containerType === "20" ? rateData.cif20 : rateData.cif40);
+      const stowageFactor = volumeM3 / weightTons;
+      const chargeable = Math.max(weightTons, volumeM3);
+
+      const rate =
+        incoterm === "FOB"
+          ? (containerType === "20" ? rateData.fob20 : rateData.fob40)
+          : (containerType === "20" ? rateData.cif20 : rateData.cif40);
+
+      freightCost = rate * chargeable;
 
       setResult({
         weightTons,
         volumeM3,
-        stowageFactor: 0,
-        chargeableUnit: "weight",
+        stowageFactor,
+        chargeableUnit: weightTons > volumeM3 ? "weight" : "volume",
         freightCost,
         totalCost: freightCost + (isNaN(pc) ? 0 : pc),
       });
@@ -97,9 +100,7 @@ export const FreightCalculator = () => {
       return;
     }
 
-    // ===============================
-    // 📦 MODO LCL (CONSOLIDADO)
-    // ===============================
+    // 🔹 LCL normal
     const stowageFactor = volumeM3 / weightTons;
     const chargeable = Math.max(weightTons, volumeM3);
 
@@ -120,17 +121,8 @@ export const FreightCalculator = () => {
     });
   };
 
+  // ✅ YA NO limpia campos. Solo borra el resultado.
   const resetCalculator = () => {
-    setWeight("");
-    setWidth("");
-    setHeight("");
-    setLength("");
-    setPackages("1");
-    setProductionCost("");
-    setSelectedCountry("");
-    setContainerType("20");
-    setIncoterm("FOB");
-    setMode("LCL");
     setResult(null);
   };
 
@@ -160,14 +152,13 @@ export const FreightCalculator = () => {
 
               <CardContent className="space-y-6">
 
-                {/* Nuevo selector de modo */}
                 <div>
                   <Label>Tipo de Servicio</Label>
                   <Select value={mode} onValueChange={(v) => setMode(v as "FCL" | "LCL")}>
-                    <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
+                    <SelectTrigger className="bg-white border border-gray-300 rounded-lg">
                       <SelectValue placeholder="Seleccione" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="LCL">Carga Parcial (LCL)</SelectItem>
                       <SelectItem value="FCL">Contenedor Completo (FCL)</SelectItem>
                     </SelectContent>
@@ -181,30 +172,26 @@ export const FreightCalculator = () => {
                   </div>
                   <div>
                     <Label>Cantidad de Bultos</Label>
-                    <Input type="number" value={packages} onChange={(e) => setPackages(e.target.value)} />
+                    <Input type="number" className="bg-white" value={packages} onChange={(e) => setPackages(e.target.value)} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div><Label>Ancho (m)</Label><Input type="number" step="0.01" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
-                  <div><Label>Alto (m)</Label><Input type="number" step="0.01" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
-                  <div><Label>Largo (m)</Label><Input type="number" step="0.01" value={length} onChange={(e) => setLength(e.target.value)} /></div>
+                  <div><Label>Ancho (m)</Label><Input type="number" step="0.01" className="bg-white" value={width} onChange={(e) => setWidth(e.target.value)} /></div>
+                  <div><Label>Alto (m)</Label><Input type="number" step="0.01" className="bg-white" value={height} onChange={(e) => setHeight(e.target.value)} /></div>
+                  <div><Label>Largo (m)</Label><Input type="number" step="0.01" className="bg-white" value={length} onChange={(e) => setLength(e.target.value)} /></div>
                 </div>
 
                 <div>
                   <Label>País de Destino</Label>
                   <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:ring-2 focus:ring-teal-500">
+                    <SelectTrigger className="bg-white border border-gray-300">
                       <SelectValue placeholder="Seleccione un país" />
                     </SelectTrigger>
 
-                    <SelectContent className="bg-white border border-gray-200 shadow-xl rounded-xl max-h-60 overflow-auto">
+                    <SelectContent className="bg-white">
                       {FREIGHT_RATES.map((rate) => (
-                        <SelectItem
-                          key={rate.country}
-                          value={rate.country}
-                          className="cursor-pointer hover:bg-teal-100 transition px-2 py-2 rounded-lg"
-                        >
+                        <SelectItem key={rate.country} value={rate.country}>
                           {rate.country} ({rate.port})
                         </SelectItem>
                       ))}
@@ -216,10 +203,10 @@ export const FreightCalculator = () => {
                   <div>
                     <Label>Tipo de Contenedor</Label>
                     <Select value={containerType} onValueChange={(v) => setContainerType(v as "20" | "40")}>
-                      <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
+                      <SelectTrigger className="bg-white border border-gray-300">
                         <SelectValue placeholder="Seleccione" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white shadow-lg rounded-lg">
+                      <SelectContent className="bg-white">
                         <SelectItem value="20">20 pies</SelectItem>
                         <SelectItem value="40">40 pies</SelectItem>
                       </SelectContent>
@@ -229,10 +216,10 @@ export const FreightCalculator = () => {
                   <div>
                     <Label>INCOTERM</Label>
                     <Select value={incoterm} onValueChange={(v) => setIncoterm(v as "FOB" | "CIF")}>
-                      <SelectTrigger className="bg-white border border-gray-300 rounded-lg shadow-sm">
+                      <SelectTrigger className="bg-white border border-gray-300">
                         <SelectValue placeholder="Seleccione" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white shadow-lg rounded-lg">
+                      <SelectContent className="bg-white">
                         <SelectItem value="FOB">FOB</SelectItem>
                         <SelectItem value="CIF">CIF</SelectItem>
                       </SelectContent>
@@ -242,7 +229,7 @@ export const FreightCalculator = () => {
 
                 <div>
                   <Label>Costo Total de Producción (USD)</Label>
-                  <Input placeholder="10000" type="number" value={productionCost} onChange={(e) => setProductionCost(e.target.value)} />
+                  <Input placeholder="10000" type="number" className="bg-white" value={productionCost} onChange={(e) => setProductionCost(e.target.value)} />
                 </div>
 
                 <Button onClick={calculateFreight} className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white">
@@ -264,13 +251,11 @@ export const FreightCalculator = () => {
                   <p>Volumen Total: {result.volumeM3.toFixed(3)} m³</p>
                 </div>
 
-                {mode === "LCL" && (
-                  <div className="p-4 rounded-xl bg-teal-50">
-                    <h3 className="font-semibold">Factor de Estiba</h3>
-                    <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
-                    <p>{result.chargeableUnit === "volume" ? "Se cobra por volumen" : "Se cobra por peso"}</p>
-                  </div>
-                )}
+                <div className="p-4 rounded-xl bg-teal-50">
+                  <h3 className="font-semibold">Factor de Estiba</h3>
+                  <p className="text-2xl font-bold">{result.stowageFactor.toFixed(2)}</p>
+                  <p>{result.chargeableUnit === "volume" ? "Se cobra por volumen" : "Se cobra por peso"}</p>
+                </div>
 
                 <div className="p-4 rounded-xl bg-blue-100">
                   <h3 className="font-semibold">Costos</h3>
