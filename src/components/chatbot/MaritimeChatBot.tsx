@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, MessageCircle } from "lucide-react";
 import { chatbotData } from "@/data/chatbotData";
 
-const intentRoutes = {
+const intentRoutes: any = {
   calculator: ["calcular", "tarifa", "flete", "precio", "costos"],
   map: ["mapa", "ruta", "puerto", "distancia"],
   containers: ["contenedor", "reefer", "dry", "40", "20"],
@@ -11,18 +11,21 @@ const intentRoutes = {
 };
 
 export const MaritimeChatBot = () => {
+
   const [open, setOpen] = useState(true);
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "bot", text: "👋 Hola, soy **Nautilus**, tu asistente marítimo. ¿Qué deseas saber?" }
+    { role: "bot", text: "👋 Hola, soy <b>Nautilus</b>, tu asistente marítimo.<br>¿Qué deseas saber?" }
   ]);
-  
+
   const [input, setInput] = useState("");
   const chatRef = useRef<any>(null);
   const dragPos = useRef({ x: 0, y: 0 });
 
+  // ---------- DRAG SYSTEM ----------
   const startDrag = (e: any) => {
     if (!chatRef.current) return;
+
     const startX = e.clientX - dragPos.current.x;
     const startY = e.clientY - dragPos.current.y;
 
@@ -37,10 +40,11 @@ export const MaritimeChatBot = () => {
     });
   };
 
+  // ---------- SEARCH KNOWLEDGE ----------
   const searchKnowledge = (msg: string) => {
     const low = msg.toLowerCase();
     for (const item of chatbotData) {
-      if (item.keywords.some(k => low.includes(k))) return item.answer;
+      if (item.keywords.some((k: string) => low.includes(k))) return item.answer;
     }
     return null;
   };
@@ -48,33 +52,34 @@ export const MaritimeChatBot = () => {
   const detectRoute = (msg: string) => {
     msg = msg.toLowerCase();
     for (const key in intentRoutes) {
-      if (intentRoutes[key].some(w => msg.includes(w))) return key;
+      if (intentRoutes[key].some((w: string) => msg.includes(w))) return key;
     }
     return null;
   };
 
+  // ---------- SEND MESSAGE ----------
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    const userMsg = { role: "user", text: input };
-    setMessages(prev => [...prev.slice(-29), userMsg]);
+    setMessages(prev => [...prev.slice(-29), { role: "user", text: input }]);
     setTyping(true);
 
-    const replyFromKnowledge = searchKnowledge(input);
+    const reply = searchKnowledge(input);
     const route = detectRoute(input);
 
     setTimeout(() => {
       setTyping(false);
 
-      if (replyFromKnowledge) {
-        setMessages(prev => [...prev.slice(-29), { role: "bot", text: replyFromKnowledge }]);
+      if (reply) {
+        setMessages(prev => [...prev.slice(-29), { role: "bot", text: reply }]);
       } else {
         setMessages(prev => [
           ...prev.slice(-29),
           {
             role: "bot",
-            text:
-              "🤔 No tengo esa respuesta aún, pero estoy aprendiendo.\nPuedes revisar **Recursos** o ir a **Contacto** para asesoría personalizada."
+            text: `No tengo esa respuesta aún, pero estoy aprendiendo.<br><br>
+                  Para tener mayor informacion presiona aqui:<br>
+            <button data-action="contact" class="chatbot-btn-contact">📞 Contactar</button>`
           }
         ]);
       }
@@ -82,16 +87,35 @@ export const MaritimeChatBot = () => {
       if (route) {
         window.dispatchEvent(new CustomEvent("assistant:navigate", { detail: { view: route } }));
       }
+
     }, 600);
 
     setInput("");
   };
 
+
+  // --------- LISTENER FOR BUTTON ---------
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (e.target?.dataset?.action === "contact") {
+        window.dispatchEvent(
+          new CustomEvent("assistant:navigate", { detail: { view: "contacto" } })
+        );
+      }
+    };
+
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, []);
+
+
   return (
     <>
       {!open && (
-        <button className="fixed bottom-5 right-5 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
-          onClick={() => setOpen(true)}>
+        <button 
+          onClick={() => setOpen(true)}
+          className="fixed bottom-5 right-5 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:scale-110 transition"
+        >
           <MessageCircle size={22} />
         </button>
       )}
@@ -99,30 +123,33 @@ export const MaritimeChatBot = () => {
       {open && (
         <div
           ref={chatRef}
-          onMouseDown={startDrag}
           className="fixed bottom-6 right-6 bg-white border shadow-xl rounded-xl flex flex-col overflow-hidden"
+          onMouseDown={startDrag}
           style={{
             width: window.innerWidth < 450 ? "70vw" : "260px",
             height: window.innerWidth < 450 ? "55vh" : "50vh",
             transform: `translate(${dragPos.current.x}px, ${dragPos.current.y}px)`
           }}
         >
+          {/* HEADER */}
           <div className="bg-blue-600 text-white p-2 flex justify-between items-center">
             <span className="font-bold">⚓ Nautilus</span>
             <button className="hover:text-red-500 text-lg" onClick={() => setOpen(false)}>✕</button>
           </div>
 
-          <div id="chat" className="flex-1 overflow-y-auto p-3 bg-gray-100 space-y-2">
+          {/* MESSAGES */}
+          <div id="chat-scroll" className="flex-1 overflow-y-auto p-3 bg-gray-100 space-y-2">
             {messages.map((m, i) => (
-              <div key={i} className={`p-2 rounded-lg text-sm max-w-[80%] ${
+              <div key={i} className={`p-2 rounded-lg text-sm max-w-[80%] break-words ${
                 m.role === "bot" ? "bg-blue-200" : "bg-green-200 ml-auto"
               }`}>
-                {m.text}
+                <span dangerouslySetInnerHTML={{ __html: m.text }} />
               </div>
             ))}
             {typing && <div className="text-gray-500 text-xs">Nautilus está escribiendo...</div>}
           </div>
 
+          {/* INPUT */}
           <div className="p-2 border-t flex gap-2">
             <input
               className="flex-1 border rounded-full px-2 text-sm"
@@ -132,11 +159,11 @@ export const MaritimeChatBot = () => {
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
             <button
+              onClick={sendMessage}
+              disabled={!input.trim()}
               className={`p-2 rounded-full ${
                 input.trim() ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-500"
               }`}
-              disabled={!input.trim()}
-              onClick={sendMessage}
             >
               <Send size={14} />
             </button>

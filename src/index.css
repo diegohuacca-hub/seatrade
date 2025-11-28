@@ -181,3 +181,21 @@
     border-radius: .6rem;
   }
 }
+
+.chatbot-btn-contact {
+  background: #1d6fd8;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  margin-top: 6px;
+  width: 100%;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.chatbot-btn-contact:hover {
+  background: #0049b3;
+  transform: scale(1.05);
+}

@@ -111,7 +111,7 @@ Para un cálculo exacto puedes usar la **calculadora**.`
     answer: `❄ Exportación de perecederos:
 
 ✔ Contenedor Reefer (temperatura controlada)  
-✔ Atmosfera controlada + dataloggers  
+✔ Atmósfera controlada + dataloggers  
 ✔ Documentos sanitarios  
 ✔ Seguro recomendado
 
@@ -161,13 +161,19 @@ Menos manipulación, mejor tarifa por volumen.`
 Ejemplo: Callao → Shanghái ≈ **28–33 días**.`
   },
 
-  // ========= FALLBACK =========
+  // ========= FALLBACK (MEJORADO) =========
   {
     keywords: ["*"],
-    answer: `🤔 No tengo esa información exacta aún.
+    answer: `
+🤔 No tengo esa información exacta aún.
 
-Pero puedo ayudarte 👇  
-👉 Puedes ir a **Recursos**, **Mapa**, **Calculadora** o **Contacto** para asesoría personalizada.`
+🧭 Pero puedo ayudarte 👇  
+
+<b>Para asistencia humana, presiona aquí:</b>
+
+<button data-action="contact" class="chatbot-btn-contact">
+📞 Contacto
+</button>
+`
   }
 ];
-
