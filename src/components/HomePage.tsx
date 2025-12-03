@@ -1,8 +1,8 @@
 // HomePage with applied color palette and typography
 // Fonts applied: Bobby Jones for titles, Bobby Jones Condensed for subtitles, Poppins for text
 
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Ship,
   Users,
@@ -10,30 +10,29 @@ import {
   Linkedin,
   Map,
   Anchor,
-  Globe2
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useLanguage } from '@/contexts/LanguageContext';
+  Globe2,
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HomePageProps {
   setActiveTab: (tab: string) => void;
 }
 
 const teamMembers = [
-  { name: 'Diana Ccahua Choqueanco', linkedin: 'https://www.linkedin.com/in/diana-ccahua', image: '/imagenes/Diana.jpg' },
-  { name: 'Monica Ccoropuna Choqueanco', linkedin: 'https://www.linkedin.com/in/monica-jazmin-ccoropuna-huayhua-b315b131a', image: '/imagenes/Monica.jpg' },
-  { name: 'Tatiana Gonzales Huichi', linkedin: 'https://www.linkedin.com/in/tatiana-gonzales-77109a198', image: '/imagenes/Tatiana.jpg' },
-  { name: 'Axel Luna Ugarte', linkedin: 'https://www.linkedin.com/in/axel-giampiero-luna-ugarte-656093370', image: '/imagenes/Axel.jpg' },
-  { name: 'Josue Luza Lizarraga', linkedin: 'https://www.linkedin.com/in/josue-gabriel-luza-lizarraga-49554a240', image: '/imagenes/Josue.jpg' },
-  { name: 'Rui Huamani Mamani', linkedin: 'https://www.linkedin.com/in/rui-oliver-huamani-mamani-19349130b', image: '/imagenes/Rui.jpg' },
-  { name: 'Johan Paredes Flores', linkedin: 'https://www.linkedin.com/in/johan-daniel-paredes-flores-403570240', image: '/imagenes/Johan.jpg' },
-  { name: 'Valeria Talavera Arapa', linkedin: 'https://www.linkedin.com/in/valeria-talavera-99b975286', image: '/imagenes/Valeria.jpeg' },
-  { name: 'Cielo Torres Valeriano', linkedin: 'https://www.linkedin.com/in/cielo-faviana-torres-valeriano-736711257', image: '/imagenes/Cielo.jpg' },
-  { name: 'Ivan Uscca Aguila', linkedin: 'https://www.linkedin.com/in/ivan-uscca-aguilar-428073207', image: '/imagenes/Ivan.jpg' }
+  { name: "Diana Ccahua Choqueanco", linkedin: "https://www.linkedin.com/in/diana-ccahua", image: "/imagenes/Diana.jpg" },
+  { name: "Monica Ccoropuna Choqueanco", linkedin: "https://www.linkedin.com/in/monica-jazmin-ccoropuna-huayhua-b315b131a", image: "/imagenes/Monica.jpg" },
+  { name: "Tatiana Gonzales Huichi", linkedin: "https://www.linkedin.com/in/tatiana-gonzales-77109a198", image: "/imagenes/Tatiana.jpg" },
+  { name: "Axel Luna Ugarte", linkedin: "https://www.linkedin.com/in/axel-giampiero-luna-ugarte-656093370", image: "/imagenes/Axel.jpg" },
+  { name: "Josue Luza Lizarraga", linkedin: "https://www.linkedin.com/in/josue-gabriel-luza-lizarraga-49554a240", image: "/imagenes/Josue.jpg" },
+  { name: "Rui Huamani Mamani", linkedin: "https://www.linkedin.com/in/rui-oliver-huamani-mamani-19349130b", image: "/imagenes/Rui.jpg" },
+  { name: "Johan Paredes Flores", linkedin: "https://www.linkedin.com/in/johan-daniel-paredes-flores-403570240", image: "/imagenes/Johan.jpg" },
+  { name: "Valeria Talavera Arapa", linkedin: "https://www.linkedin.com/in/valeria-talavera-99b975286", image: "/imagenes/Valeria.jpeg" },
+  { name: "Cielo Torres Valeriano", linkedin: "https://www.linkedin.com/in/cielo-faviana-torres-valeriano-736711257", image: "/imagenes/Cielo.jpg" },
+  { name: "Ivan Uscca Aguila", linkedin: "https://www.linkedin.com/in/ivan-uscca-aguilar-428073207", image: "/imagenes/Ivan.jpg" }
 ];
 
 export const HomePage = ({ setActiveTab }: HomePageProps) => {
-
   const { t } = useLanguage();
 
   return (
@@ -70,7 +69,7 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
 
             <Button
               className="mt-4 bg-[#4f707b] text-white hover:bg-[#2c3e50] rounded-xl px-6 py-2 transition-all"
-              onClick={() => setActiveTab('mapa')}
+              onClick={() => setActiveTab("mapa")}
             >
               {t("home.start")}
             </Button>
@@ -86,12 +85,13 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
 
         <div className="grid md:grid-cols-2 gap-4">
           {teamMembers.map((member, idx) => (
-            <Card key={idx} className="flex items-center justify-between p-4 bg-[#a2c0cb] hover:bg-[#8bb1c1] transition-all rounded-xl shadow-md">
-
+            <Card
+              key={idx}
+              className="flex items-center justify-between p-4 bg-[#a2c0cb] hover:bg-[#8bb1c1] transition-all rounded-xl shadow-md"
+            >
               <div>
                 <p className="font-semibold text-[#2c3e50]">{member.name}</p>
 
-                {/* 🔥 LinkedIn mejorado */}
                 {member.linkedin && (
                   <motion.a
                     href={member.linkedin}
@@ -105,7 +105,6 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
                 )}
               </div>
 
-              {/* FOTO CUADRADA */}
               <motion.img
                 src={member.image}
                 alt={member.name}
@@ -119,27 +118,45 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
       </motion.section>
 
       {/* ─────────── ASESOR ─────────── */}
-      <motion.section className="max-w-6xl mx-auto px-6 py-6">
-        <Card className="p-6 shadow-md border rounded-xl bg-[#b7c9d9] border-[#8da3b1]">
-          <div className="flex items-center gap-3 mb-4">
-            <UserCheck className="h-8 w-8 text-[#45616d]" />
-            <h2 className="text-xl md:text-2xl font-bobby-condensed font-bold text-[#2c3e50]">
-              {t("home.advisor")}
-            </h2>
+      <motion.section className="max-w-4xl mx-auto px-6 py-8">
+        <Card className="p-6 shadow-md border rounded-xl bg-[#b7c9d9] border-[#8da3b1] flex flex-col md:flex-row items-center justify-between gap-6">
+
+          {/* TEXTO DEL ASESOR */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+              <UserCheck className="h-8 w-8 text-[#45616d]" />
+              <h2 className="text-2xl font-bobby-condensed font-bold text-[#2c3e50]">
+                {t("home.advisor") || "Asesor del Proyecto"}
+              </h2>
+            </div>
+
+            <p className="text-base font-semibold text-[#2c3e50]">
+              Mg. Manuel Tejada Mandujano
+            </p>
           </div>
-          <p className="text-base font-semibold text-[#2c3e50]">Manuel Tejada Mandujano</p>
+
+          {/* FOTO DEL ASESOR */}
+          <motion.img
+            src="/imagenes/Mg..jpg"
+            alt="Mg. Manuel Tejada Mandujano"
+            className="w-28 h-28 rounded-xl object-cover border-2 border-[#45616d] shadow-md"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 140 }}
+          />
         </Card>
       </motion.section>
 
       {/* ─────── FEATURES ─────── */}
       <motion.section className="max-w-6xl mx-auto px-6 py-12">
-        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center">{t("home.features")}</h2>
+        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-8 text-center">
+          {t("home.features")}
+        </h2>
 
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { icon: Map, title: t("home.featureMap"), tab: "mapa", text: t("home.featureMapText") },
             { icon: Anchor, title: t("home.featureInfo"), tab: "informacion", text: t("home.featureInfoText") },
-            { icon: Globe2, title: t("home.featureTrade"), tab: "recursos", text: t("home.featureTradeText") }
+            { icon: Globe2, title: t("home.featureTrade"), tab: "recursos", text: t("home.featureTradeText") },
           ].map((feature, idx) => (
             <Card
               key={idx}
@@ -158,17 +175,43 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
         </div>
       </motion.section>
 
+      {/* ─────── VIDEO SECTION ─────── */}
+      <motion.section
+        className="max-w-5xl mx-auto px-6 py-12"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <h2 className="text-3xl font-bobby font-bold text-[#2c3e50] mb-6 text-center">
+          {t("Video Presentación") || "Presentación del Proyecto"}
+        </h2>
+
+        <Card className="bg-[#b7c9d9] border border-[#8da3b1] rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all">
+          <div className="w-full aspect-video rounded-xl overflow-hidden shadow-md">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/d2DfW1PQiis"
+              title="Sea Trade Navigator Video"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </Card>
+      </motion.section>
+
       {/* ───────── CONTACTO ───────── */}
       <motion.section className="w-full bg-[#b7c9d9] border-t border-[#8da3b1] py-10 px-4">
         <div className="max-w-5xl mx-auto text-center space-y-4">
-          <h2 className="text-2xl font-bobby font-bold text-[#2c3e50]">{t("home.contactTitle")}</h2>
+          <h2 className="text-2xl font-bobby font-bold text-[#2c3e50]">
+            {t("home.contactTitle")}
+          </h2>
 
           <p className="text-[#31454c] max-w-xl mx-auto text-sm">
             {t("home.contactText")}
           </p>
 
           <motion.button
-            onClick={() => setActiveTab('contacto')}
+            onClick={() => setActiveTab("contacto")}
             className="mt-4 bg-[#4f707b] text-white px-4 py-2 text-sm rounded-lg shadow-md hover:bg-[#2c3e50] transition-all"
             whileHover={{ scale: 1.05 }}
           >
@@ -176,7 +219,6 @@ export const HomePage = ({ setActiveTab }: HomePageProps) => {
           </motion.button>
         </div>
       </motion.section>
-
     </div>
   );
 };
